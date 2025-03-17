@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard | FRUTEE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background: url('https://source.unsplash.com/1600x900/?farm,fields') no-repeat center center/cover;
+            font-family: 'Arial', sans-serif;
+            background-attachment: fixed;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #2E7D32;
+            color: white;
+            position: fixed;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .sidebar a i {
+            font-size: 20px;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .scroll-container {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>FRUTEE</h2>
+        <a href="#" title="View your main dashboard and analytics"><i class="bi bi-house-door"></i> Dashboard</a>
+        <a href="#" title="Manage and track your customer orders"><i class="bi bi-box-seam"></i> Orders</a>
+        <a href="#" title="View, add, and update your farm products"><i class="bi bi-basket"></i> Products</a>
+        <a href="#" title="Create and manage your marketing campaigns"><i class="bi bi-megaphone"></i> Campaigns</a>
+        <a href="#" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="text-success">Farmer Dashboard</h2>
+
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="card p-3">
+                    <h4>Recent Orders</h4>
+                    <div class="scroll-container">
+                        <ul class="list-group" id="ordersList"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card p-3">
+                    <h4>Notifications</h4>
+                    <div class="scroll-container">
+                        <ul class="list-group" id="notificationsList"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-6">
+                <div class="card p-3">
+                    <h4>Product Availability</h4>
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card p-3">
+                    <h4>Sales Overview</h4>
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const orders = [
+        { id: "1001", product: "Organic Apples", status: "Confirmed" },
+        { id: "1002", product: "Strawberries", status: "Pending" },
+        { id: "1003", product: "Lettuce", status: "Cancelled" },
+        { id: "1004", product: "Bananas", status: "Confirmed" },
+        { id: "1005", product: "Grapes", status: "Shipped" },
+        { id: "1006", product: "Mangoes", status: "Pending" },
+        { id: "1007", product: "Blueberries", status: "Confirmed" },
+        { id: "1008", product: "Watermelon", status: "Delivered" },
+        { id: "1009", product: "Tomatoes", status: "Cancelled" },
+        { id: "1010", product: "Oranges", status: "Confirmed" }
+    ];
+
+    const notifications = [
+        { message: "Order #1003 was cancelled.", type: "warning" },
+        { message: "New order received: Order #1002.", type: "info" },
+        { message: "Your product 'Bananas' is low on stock.", type: "danger" },
+        { message: "Order #1005 has been shipped.", type: "success" },
+        { message: "Order #1006 is still pending.", type: "warning" },
+        { message: "Order #1008 was delivered successfully.", type: "success" },
+        { message: "New review received for 'Grapes'.", type: "info" },
+        { message: "Order #1009 was cancelled by the customer.", type: "warning" },
+        { message: "Your campaign 'Summer Sale' is live!", type: "success" },
+        { message: "Order #1010 has been confirmed.", type: "info" }
+    ];
+
+    function loadDashboardData() {
+        const ordersList = document.getElementById("ordersList");
+        const notificationsList = document.getElementById("notificationsList");
+
+        orders.forEach(order => {
+            ordersList.innerHTML += `<li class="list-group-item">
+                <strong>${order.product}</strong> - <span class="text-muted">${order.status}</span>
+            </li>`;
+        });
+
+        notifications.forEach(notification => {
+            notificationsList.innerHTML += `<li class="list-group-item list-group-item-${notification.type}">
+                ${notification.message}
+            </li>`;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadDashboardData);
+
+    // Sales Chart
+    new Chart(document.getElementById('salesChart'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+            datasets: [{
+                label: 'Sales ($)',
+                data: [500, 1000, 750, 1250, 2000],
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                fill: true
+            }]
+        }
+    });
+
+    // Product Availability Chart
+    new Chart(document.getElementById('productChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Apples', 'Strawberries', 'Lettuce', 'Oranges', 'Tomatoes'],
+            datasets: [{
+                label: 'Availability (kg)',
+                data: [30, 10, 25, 40, 20],
+                backgroundColor: ['#FF8C00', '#FF4500', '#008000', '#4682B4', '#9932CC']
+            }]
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

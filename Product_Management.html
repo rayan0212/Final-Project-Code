@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management | FRUTEE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background: url('https://source.unsplash.com/1600x900/?market,organic') no-repeat center center/cover;
+            font-family: 'Poppins', sans-serif;
+            background-attachment: fixed;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #2E7D32;
+            color: white;
+            position: fixed;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .sidebar a i {
+            font-size: 20px;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            border: none;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-custom {
+            transition: 0.3s;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.1);
+        }
+
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .form-select {
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #ced4da;
+            background: white;
+            appearance: none;
+            width: 100%;
+        }
+
+        .form-select:focus {
+            border-color: #2E7D32;
+            box-shadow: 0px 0px 6px rgba(46, 125, 50, 0.5);
+        }
+
+        .select-wrapper i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 18px;
+            color: #2E7D32;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>FRUTEE</h2>
+        <a href="#" title="View your main dashboard and analytics"><i class="bi bi-house-door"></i> Dashboard</a>
+        <a href="#" title="Manage and track your customer orders"><i class="bi bi-box-seam"></i> Orders</a>
+        <a href="#" title="View, add, and update your farm products"><i class="bi bi-basket"></i> Products</a>
+        <a href="#" title="Create and manage your marketing campaigns"><i class="bi bi-megaphone"></i> Campaigns</a>
+        <a href="#" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="text-success">Product Management</h2>
+
+        <!-- Add Product Form -->
+        <div class="card p-4 mb-4">
+            <h4>Add New Product</h4>
+            <form id="addProductForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" id="productName" class="form-control" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Price ($)</label>
+                        <input type="number" id="productPrice" class="form-control" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <div class="select-wrapper">
+                            <select id="productCategory" class="form-select">
+                                <option>Fruits</option>
+                                <option>Vegetables</option>
+                                <option>Dairy</option>
+                                <option>Grains</option>
+                            </select>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Availability</label>
+                        <div class="select-wrapper">
+                            <select id="productAvailability" class="form-select">
+                                <option value="Available">Available</option>
+                                <option value="Not Available">Not Available</option>
+                            </select>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success mt-3 btn-custom"><i class="bi bi-plus-circle"></i> Add Product</button>
+            </form>
+        </div>
+
+        <!-- Product List -->
+        <div class="card p-4">
+            <h4>Product List</h4>
+            <div class="table-container">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Availability</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTable">
+                        <!-- Dynamic Product Rows -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const productTable = document.getElementById("productTable");
+    const addProductForm = document.getElementById("addProductForm");
+
+    let products = [
+        { name: "Organic Apples", price: 3.5, category: "Fruits", availability: "Available" },
+        { name: "Fresh Lettuce", price: 2.0, category: "Vegetables", availability: "Available" },
+        { name: "Whole Milk", price: 1.8, category: "Dairy", availability: "Not Available" }
+    ];
+
+    function loadProducts() {
+        productTable.innerHTML = "";
+        products.forEach((product, index) => {
+            productTable.innerHTML += `
+                <tr>
+                    <td>${product.name}</td>
+                    <td>$${product.price.toFixed(2)}</td>
+                    <td>${product.category}</td>
+                    <td class="${product.availability === 'Available' ? 'text-success' : 'text-danger'}">${product.availability}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm btn-custom" onclick="editProduct(${index})"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-danger btn-sm btn-custom" onclick="deleteProduct(${index})"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadProducts);
+</script>
+
+</body>
+</html>

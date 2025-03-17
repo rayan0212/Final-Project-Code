@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management | FRUTEE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background: url('https://source.unsplash.com/1600x900/?orders,warehouse') no-repeat center center/cover;
+            font-family: 'Poppins', sans-serif;
+            background-attachment: fixed;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #2E7D32;
+            color: white;
+            position: fixed;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .sidebar a i {
+            font-size: 20px;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            border: none;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-custom {
+            transition: 0.3s;
+        }
+
+        .btn-custom:hover {
+            transform: scale(1.1);
+        }
+
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* צבעים למילים של הסטטוס בלבד */
+        .status-confirmed { color: green; font-weight: bold; }
+        .status-pending { color: orange; font-weight: bold; }
+        .status-cancelled { color: red; font-weight: bold; }
+        .status-shipped { color: blue; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>FRUTEE</h2>
+        <a href="#" title="View your main dashboard and analytics"><i class="bi bi-house-door"></i> Dashboard</a>
+        <a href="#" title="Manage and track your customer orders"><i class="bi bi-box-seam"></i> Orders</a>
+        <a href="#" title="View, add, and update your farm products"><i class="bi bi-basket"></i> Products</a>
+        <a href="#" title="Create and manage your marketing campaigns"><i class="bi bi-megaphone"></i> Campaigns</a>
+        <a href="#" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <h2 class="text-success">Order Management</h2>
+
+        <!-- Filters -->
+        <div class="mb-3">
+            <label for="statusFilter" class="form-label">Filter by Status:</label>
+            <select id="statusFilter" class="form-select" onchange="loadOrders()">
+                <option value="All">All</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Shipped">Shipped</option>
+            </select>
+        </div>
+
+        <!-- Active Orders -->
+        <div class="card p-4 mb-4">
+            <h4>Active Orders</h4>
+            <div class="table-container">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTable">
+                        <!-- Dynamic Orders -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Order Statistics -->
+        <div class="card p-4">
+            <h4>Sales Statistics</h4>
+            <canvas id="salesChart"></canvas>
+        </div>
+    </div>
+
+<script>
+    const orderTable = document.getElementById("orderTable");
+    const statusFilter = document.getElementById("statusFilter");
+
+    let orders = [
+        { id: "1001", product: "Organic Apples", status: "Confirmed" },
+        { id: "1002", product: "Strawberries", status: "Pending" },
+        { id: "1003", product: "Lettuce", status: "Cancelled" },
+        { id: "1004", product: "Bananas", status: "Confirmed" },
+        { id: "1005", product: "Grapes", status: "Shipped" },
+        { id: "1006", product: "Mangoes", status: "Pending" },
+        { id: "1007", product: "Blueberries", status: "Confirmed" },
+        { id: "1008", product: "Watermelon", status: "Shipped" },
+        { id: "1009", product: "Tomatoes", status: "Cancelled" },
+        { id: "1010", product: "Oranges", status: "Confirmed" }
+    ];
+
+    function loadOrders() {
+        orderTable.innerHTML = "";
+        const filter = statusFilter.value;
+
+        orders.forEach((order, index) => {
+            if (filter === "All" || order.status === filter) {
+                orderTable.innerHTML += `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${order.product}</td>
+                        <td><span class="status-${order.status.toLowerCase()}">${order.status}</span></td>
+                        <td>
+                            <button class="btn btn-success btn-sm btn-custom" onclick="updateOrder(${index}, 'Confirmed')"><i class="bi bi-check-circle"></i></button>
+                            <button class="btn btn-danger btn-sm btn-custom" onclick="updateOrder(${index}, 'Cancelled')"><i class="bi bi-x-circle"></i></button>
+                            <button class="btn btn-primary btn-sm btn-custom" onclick="updateOrder(${index}, 'Shipped')"><i class="bi bi-truck"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+    }
+
+    function updateOrder(index, newStatus) {
+        orders[index].status = newStatus;
+        loadOrders();
+    }
+
+    document.addEventListener("DOMContentLoaded", loadOrders);
+
+    new Chart(document.getElementById('salesChart'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+            datasets: [{
+                label: 'Sales ($)',
+                data: [800, 1200, 1800, 2400, 3000],
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.3)',
+                fill: true
+            }]
+        }
+    });
+
+</script>
+
+</body>
+</html>
