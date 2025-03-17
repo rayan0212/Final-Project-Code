@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FRUTEE - Smart Farming</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body , html {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden
+            
+        }
+
+
+        /* Logo Styling */
+        .logo {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            position: fixed; /* Fixes navbar to the top */
+            width: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.6); /* Transparent at start */
+            transition: background 0.4s ease-in-out, padding 0.3s ease-in-out;
+            padding: 5px 15px; /* Smaller padding */
+            height: 50px; /* Reduce navbar height */
+            z-index: 1000; /* Ensures navbar stays above all content */
+        }
+
+        /* Change navbar background when scrolling */
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95); /* Solid background when scrolling */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Adds shadow for better visibility */
+        }
+
+        /* Logo */
+        .navbar-brand img {
+            height: 35px; /* Smaller logo */
+        }
+
+        /* Navbar links */
+        .navbar-nav .nav-link {
+            font-size: 13px;
+            color: black; /* Ensure good contrast */
+            padding: 5px 8px;
+        }
+
+
+        .carousel {
+            margin-top: 0; /* Starts from the very top */
+            height: 70vh; /* 70% of the screen height */
+        }
+
+        .carousel img {
+            object-fit: cover;
+            height: 70vh; /* Image height set to 70% of screen */
+            width: 100%;
+        }
+
+        /* ABOUT US Section Styling */
+        #about {
+            padding: 60px 0;
+        }
+
+        /* Adjust image size and border-radius */
+        #about img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* Style the small green heading */
+        #about h6 {
+            font-size: 1rem;
+            color: #28a745; /* Bootstrap Success Green */
+        }
+
+        /* Style the main title */
+        #about h2 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* Style the text */
+        #about p {
+            font-size: 1.1rem;
+            color: #6c757d; /* Bootstrap Gray */
+        }
+
+        /* Style the button */
+        #about .btn {
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Hover effect for the button */
+        #about .btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        /* Ensure Carousel Indicators are Circles */
+        .carousel-indicators button {
+            width: 12px !important; /* Adjust size */
+            height: 12px !important; /* Make them round */
+            border-radius: 50% !important; /* Circular shape */
+            background-color: rgba(255, 255, 255, 0.7) !important; /* Light color */
+            border: none !important;
+            margin: 5px !important;
+            transition: background-color 0.3s ease-in-out, transform 0.2s !important;
+        }
+
+        /* Active Indicator - Highlight current slide */
+        .carousel-indicators .active {
+            background-color: rgba(255, 255, 255, 1) !important; /* Brighter white */
+            transform: scale(1.3) !important; /* Slightly larger */
+        }
+
+
+        /* Sections Styling */
+        .container {
+            padding: 40px 0;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="photos/SmallSquareLogoJpg.jpg" alt="FRUTEE Logo" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="signIn.html">Sign In</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Carousel (Image Slideshow) -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="photos/pexels-dalia-al-refai-235376732-17131185.jpg" class="d-block w-100" alt="Farm">
+            </div>
+            <div class="carousel-item">
+                <img src="photos/pexels-filipp-romanovski-297235844-17275906.jpg" class="d-block w-100" alt="Fresh Produce">
+            </div>
+            <div class="carousel-item">
+                <img src="photos/pexels-furkan-gunes-45417726-18268127.jpg" class="d-block w-100" alt="Self-Picking">
+            </div>
+            <div class="carousel-item">
+                <img src="photos/pexels-roman-odintsov-6588489.jpg" class="d-block w-100" alt="Workshops">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!-- Why Choose Us Section -->
+    <section class="container text-center my-5">
+        <h2>Why Choose Us?</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h4>🌱 Fresh & Organic</h4>
+                <p>We provide high-quality, organic produce straight from local farmers.</p>
+            </div>
+            <div class="col-md-4">
+                <h4>🎉 Unique Experiences</h4>
+                <p>Enjoy self-picking, workshops, and farm tours for an unforgettable experience.</p>
+            </div>
+            <div class="col-md-4">
+                <h4>🤝 Supporting Farmers</h4>
+                <p>By choosing FRUTEE, you directly support local farmers and sustainable agriculture.</p>
+            </div>
+        </div>
+    </section>
+
+
+        <!-- ABOUT US Section -->
+        <section id="about" class="container my-5">
+            <div class="row align-items-center">
+                <!-- Video on the Left -->
+                <div class="col-md-6">
+                    <video autoplay muted loop class="img-fluid rounded">
+                        <source src="photos/1230-144234732_small.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <!-- Text on the Right -->
+                <div class="col-md-6">
+                    <h6 class="text-success fw-bold">FRUTEE</h6> <!-- Small colored text -->
+                    <h2 class="fw-bold">Connecting People & Farmers</h2> <!-- Main Title -->
+                    <p class="text-muted">
+                        FRUTEE is a platform that brings local farmers and customers together, 
+                        offering fresh produce, self-picking experiences, and educational agricultural workshops.
+                        Our goal is to support sustainable farming while providing unique and interactive experiences 
+                        for families, groups, and tourists.
+                    </p>
+                    <p class="text-muted">
+                        Whether you're looking for a relaxing day on a farm, fresh organic vegetables, 
+                        or an exciting picking activity – FRUTEE has something for you.
+                    </p>
+
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center p-3">
+        <p>&copy; 2025 FRUTEE - All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            window.addEventListener("scroll", function () {
+                let navbar = document.querySelector(".navbar");
+                if (window.scrollY > 50) {
+                    navbar.classList.add("scrolled");
+                } else {
+                    navbar.classList.remove("scrolled");
+                }
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>

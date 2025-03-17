@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farmer Registration | FRUTEE</title>
+    <title>Client Registration | FRUTEE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         /* Background with Green Gradient Circles */
         body {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,7 +19,7 @@
             overflow-x: hidden;
         }
 
-        /* Circular Overlays (Different Positions than Sign In) */
+        /* Circular Overlays (Different Positions than Farmer Sign Up) */
         .circle {
             position: absolute;
             border-radius: 50%;
@@ -27,27 +27,27 @@
         }
 
         .circle.one {
-            width: 250px;
-            height: 250px;
+            width: 220px;
+            height: 220px;
             background: #95d5b2;
-            top: -5%;
-            right: -10%;
+            top: -8%;
+            right: -12%;
         }
 
         .circle.two {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             background: #74c69d;
-            bottom: -5%;
-            left: -5%;
+            bottom: -4%;
+            left: -8%;
         }
 
         .circle.three {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             background: #52b788;
-            top: 50%;
-            left: 50%;
+            top: 60%;
+            left: 40%;
             transform: translate(-50%, -50%);
         }
 
@@ -132,31 +132,6 @@
             transform: scale(1.1);
         }
 
-        /* File Input Styling */
-        .custom-file-input {
-            border: 2px dashed #95d5b2;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            display: block;
-            width: 100%;
-            border-radius: 10px;
-            transition: border-color 0.3s ease-in-out;
-        }
-
-        .custom-file-input:hover {
-            border-color: #2d6a4f;
-        }
-
-        .preview-img {
-            max-width: 100%;
-            height: auto;
-            margin-top: 10px;
-            display: none;
-            border-radius: 10px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
         /* Sign In Link */
         .signin-link {
             margin-top: 10px;
@@ -173,7 +148,7 @@
 
 <body>
 
-    <!-- Background Circles (Different from Sign In) -->
+    <!-- Background Circles -->
     <div class="circle one"></div>
     <div class="circle two"></div>
     <div class="circle three"></div>
@@ -181,7 +156,7 @@
     <div class="card">
         <h3>Create an Account</h3>
 
-        <form id="farmerSignupForm">
+        <form id="clientSignupForm">
             <div class="mb-3 text-start">
                 <label class="form-label required">Full Name <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="name" placeholder="John Doe">
@@ -189,9 +164,9 @@
             </div>
 
             <div class="mb-3 text-start">
-                <label class="form-label required">Farm Name <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="farmName" placeholder="Sunny Fields">
-                <div class="error-message" id="farmNameError">This field is required.</div>
+                <label class="form-label required">Username <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="username" placeholder="johndoe123">
+                <div class="error-message" id="usernameError">This field is required.</div>
             </div>
 
             <div class="mb-3 text-start">
@@ -212,13 +187,6 @@
                 <div class="error-message" id="confirmPasswordError">Passwords do not match.</div>
             </div>
 
-            <!-- File Upload -->
-            <div class="mb-3 text-start">
-                <label class="form-label">Farm Image</label>
-                <input type="file" class="form-control custom-file-input" id="farmImage" accept="image/*">
-                <img id="imagePreview" class="preview-img">
-            </div>
-
             <!-- Register Button -->
             <button type="submit" class="btn-register">✓</button>
         </form>
@@ -228,7 +196,7 @@
     </div>
 
     <script>
-                document.getElementById("farmerSignupForm").addEventListener("submit", function(event) {
+        document.getElementById("clientSignupForm").addEventListener("submit", function(event) {
             event.preventDefault();
             let isValid = true;
 
@@ -246,7 +214,7 @@
             }
 
             validateField("name", "nameError");
-            validateField("farmName", "farmNameError");
+            validateField("username", "usernameError");
             validateField("email", "emailError");
             validateField("password", "passwordError");
             validateField("confirmPassword", "confirmPasswordError");
@@ -265,17 +233,7 @@
             }
         });
 
-        document.getElementById("farmImage").addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById("imagePreview").src = e.target.result;
-                    document.getElementById("imagePreview").style.display = "block";
-                };
-                reader.readAsDataURL(file);
-            }
-        });
+        
     </script>
 
 </body>
