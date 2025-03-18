@@ -10,40 +10,83 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
     <style>
-        body {
-            background: url('https://source.unsplash.com/1600x900/?orders,warehouse') no-repeat center center/cover;
-            font-family: 'Poppins', sans-serif;
-            background-attachment: fixed;
-        }
+    body {
+        font-family: 'Arial', sans-serif;
+        background: #e8f5e9; /* רקע ירוק בהיר */
+        background-attachment: fixed;
+        overflow-x: hidden;
+    }
 
+        /* ✅ סגנון ה-Sidebar */
         .sidebar {
             width: 250px;
             height: 100vh;
-            background: #2E7D32;
-            color: white;
             position: fixed;
             padding: 20px;
             text-align: center;
+            overflow: hidden;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #1b5e20; /* ירוק כהה */
         }
 
+        .sidebar video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .sidebar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        /* ✅ כותרת ה-sidebar */
+        .sidebar-header h2 {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        /* ✅ קישורים בסיידבר */
         .sidebar a {
             color: white;
-            text-decoration: none;
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 15px;
+            padding: 12px 20px;
             font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+            width: 100%;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
             transition: 0.3s;
-        }
-
-        .sidebar a i {
-            font-size: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
         }
 
         .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
+            background: rgba(76, 175, 80, 0.7); /* ירוק בהיר יותר */
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .sidebar a i {
+            font-size: 22px;
+            color: #cddc39; /* צהוב ירקרק */
         }
 
         .content {
@@ -75,40 +118,88 @@
             overflow-y: auto;
         }
 
-        /* צבעים למילים של הסטטוס בלבד */
         .status-confirmed { color: green; font-weight: bold; }
         .status-pending { color: orange; font-weight: bold; }
         .status-cancelled { color: red; font-weight: bold; }
-        .status-shipped { color: blue; font-weight: bold; }
 
     </style>
 </head>
 <body>
 
     <!-- Sidebar Navigation -->
-    <div class="sidebar">
-        <h2>FRUTEE</h2>
-        <a href="#" title="View your main dashboard and analytics"><i class="bi bi-house-door"></i> Dashboard</a>
-        <a href="#" title="Manage and track your customer orders"><i class="bi bi-box-seam"></i> Orders</a>
-        <a href="#" title="View, add, and update your farm products"><i class="bi bi-basket"></i> Products</a>
-        <a href="#" title="Create and manage your marketing campaigns"><i class="bi bi-megaphone"></i> Campaigns</a>
-        <a href="#" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>FRUTEE</h2>
+        </div>
+
+        <video autoplay muted loop id="sidebarVideo">
+            <source src="img/5527127-uhd_2160_3840_24fps.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+
+        <div class="sidebar-menu">
+            <a href="DashBoard.html" title="View your main dashboard and analytics">
+                <i class="bi bi-house-door"></i> Dashboard
+            </a>
+            <a href="Order_Management.html" title="Manage and track your customer orders">
+                <i class="bi bi-box-seam"></i> Orders
+            </a>
+            <a href="Product_Management.html" title="View, add, and update your farm products">
+                <i class="bi bi-basket"></i> Products
+            </a>
+            <a href="Marketing_Campaigns.html" title="Create and manage your marketing campaigns">
+                <i class="bi bi-megaphone"></i> Campaigns
+            </a>
+            <a href="WorkShop_Management.html" title="Create and manage engaging workshops effortlessly">
+                <i class="bi bi-people"></i> Workshop
+            </a>
+            <a href="Feedbackandimg.html" title="View and manage customer feedback">
+                <i class="bi bi-chat-dots"></i> Feedback
+            </a>
+            
+
+            <a href="#" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        </div>
     </div>
 
     <!-- Main Content -->
     <div class="content">
         <h2 class="text-success">Order Management</h2>
 
-        <!-- Filters -->
-        <div class="mb-3">
-            <label for="statusFilter" class="form-label">Filter by Status:</label>
-            <select id="statusFilter" class="form-select" onchange="loadOrders()">
-                <option value="All">All</option>
-                <option value="Confirmed">Confirmed</option>
-                <option value="Pending">Pending</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Shipped">Shipped</option>
-            </select>
+
+    <div class="mb-3">
+        <label for="statusFilter" class="form-label">Select Status:</label>
+        <select id="statusFilter" class="form-select" onchange="applyFilter()">
+            <option value="All">All</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Pending">Pending</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+    </div>
+
+        
+        <!-- Scheduled Visits -->
+        <div class="card p-4 mb-4">
+            <h4>Scheduled Visits</h4>
+            <div class="table-container">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Visit ID</th>
+                            <th>Visitor Name</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>People</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="visitTable">
+                        <!-- Dynamic Visits -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Active Orders -->
@@ -139,50 +230,111 @@
     </div>
 
 <script>
+
+    // אלמנטים לטבלאות וסינון
     const orderTable = document.getElementById("orderTable");
+    const visitTable = document.getElementById("visitTable");
     const statusFilter = document.getElementById("statusFilter");
 
+    // נתוני הזמנות
     let orders = [
         { id: "1001", product: "Organic Apples", status: "Confirmed" },
         { id: "1002", product: "Strawberries", status: "Pending" },
         { id: "1003", product: "Lettuce", status: "Cancelled" },
         { id: "1004", product: "Bananas", status: "Confirmed" },
-        { id: "1005", product: "Grapes", status: "Shipped" },
+        { id: "1005", product: "Grapes", status: "Pending" },
         { id: "1006", product: "Mangoes", status: "Pending" },
         { id: "1007", product: "Blueberries", status: "Confirmed" },
-        { id: "1008", product: "Watermelon", status: "Shipped" },
-        { id: "1009", product: "Tomatoes", status: "Cancelled" },
-        { id: "1010", product: "Oranges", status: "Confirmed" }
+        { id: "1008", product: "Tomatoes", status: "Cancelled" },
+        { id: "1009", product: "Oranges", status: "Confirmed" }
     ];
 
-    function loadOrders() {
-        orderTable.innerHTML = "";
-        const filter = statusFilter.value;
+    // נתוני ביקורים
+    let visits = [
+        { id: "V1001", name: "John Doe", date: "2025-03-20", time: "10:00 AM", people: 5, status: "Pending" },
+        { id: "V1002", name: "Sarah Smith", date: "2025-03-21", time: "12:00 PM", people: 8, status: "Confirmed" },
+        { id: "V1003", name: "Michael Brown", date: "2025-03-22", time: "09:30 AM", people: 3, status: "Pending" },
+        { id: "V1004", name: "Emma Johnson", date: "2025-03-23", time: "02:00 PM", people: 10, status: "Cancelled" },
+        { id: "V1005", name: "James Wilson", date: "2025-03-24", time: "11:00 AM", people: 7, status: "Pending" }
+    ];
 
-        orders.forEach((order, index) => {
-            if (filter === "All" || order.status === filter) {
-                orderTable.innerHTML += `
-                    <tr>
-                        <td>${order.id}</td>
-                        <td>${order.product}</td>
-                        <td><span class="status-${order.status.toLowerCase()}">${order.status}</span></td>
-                        <td>
-                            <button class="btn btn-success btn-sm btn-custom" onclick="updateOrder(${index}, 'Confirmed')"><i class="bi bi-check-circle"></i></button>
-                            <button class="btn btn-danger btn-sm btn-custom" onclick="updateOrder(${index}, 'Cancelled')"><i class="bi bi-x-circle"></i></button>
-                            <button class="btn btn-primary btn-sm btn-custom" onclick="updateOrder(${index}, 'Shipped')"><i class="bi bi-truck"></i></button>
-                        </td>
-                    </tr>
-                `;
-            }
+    // פונקציה לסינון נתונים לפי סטטוס
+    function applyFilter() {
+        const selectedStatus = statusFilter.value;
+
+        loadOrders(selectedStatus);
+        loadVisits(selectedStatus);
+    }
+
+    // טעינת הזמנות לפי סטטוס
+    function loadOrders(status = "All") {
+        orderTable.innerHTML = "";
+
+        let filteredOrders = orders.filter(order => status === "All" || order.status === status);
+
+        filteredOrders.forEach((order, index) => {
+            orderTable.innerHTML += `
+                <tr>
+                    <td>${order.id}</td>
+                    <td>${order.product}</td>
+                    <td><span class="status-${order.status.toLowerCase()}">${order.status}</span></td>
+                    <td>
+                        <button class="btn btn-success btn-sm btn-custom" onclick="updateStatus('orders', ${index}, 'Confirmed')">
+                            <i class="bi bi-check-circle"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm btn-custom" onclick="updateStatus('orders', ${index}, 'Cancelled')">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
         });
     }
 
-    function updateOrder(index, newStatus) {
-        orders[index].status = newStatus;
-        loadOrders();
+    // טעינת ביקורים לפי סטטוס
+    function loadVisits(status = "All") {
+        visitTable.innerHTML = "";
+
+        let filteredVisits = visits.filter(visit => status === "All" || visit.status === status);
+
+        filteredVisits.forEach((visit, index) => {
+            visitTable.innerHTML += `
+                <tr>
+                    <td>${visit.id}</td>
+                    <td>${visit.name}</td>
+                    <td>${visit.date}</td>
+                    <td>${visit.time}</td>
+                    <td>${visit.people}</td>
+                    <td><span class="status-${visit.status.toLowerCase()}">${visit.status}</span></td>
+                    <td>
+                        <button class="btn btn-success btn-sm btn-custom" onclick="updateStatus('visits', ${index}, 'Confirmed')">
+                            <i class="bi bi-check-circle"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm btn-custom" onclick="updateStatus('visits', ${index}, 'Cancelled')">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
     }
 
-    document.addEventListener("DOMContentLoaded", loadOrders);
+    // עדכון סטטוס של ביקור או הזמנה
+    function updateStatus(type, index, newStatus) {
+        if (type === "orders") {
+            orders[index].status = newStatus;
+        } else {
+            visits[index].status = newStatus;
+        }
+        applyFilter();
+    }
+
+    // טוען נתונים כשהדף נטען
+    document.addEventListener("DOMContentLoaded", () => {
+        applyFilter();
+    });
+
+
 
     new Chart(document.getElementById('salesChart'), {
         type: 'line',
@@ -197,6 +349,7 @@
             }]
         }
     });
+
 
 </script>
 
