@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - FRUTEE</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Cart Container */
+        .cart-container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            margin-top: 40px;
+        }
+
+        .cart-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #28a745;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Cart Items */
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+            transition: 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .cart-item img {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item h5 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* Quantity Controls */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 120px;
+        }
+
+        .quantity-btn {
+            border: none;
+            background: #28a745;
+            color: white;
+            padding: 6px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: #218838;
+        }
+
+        .quantity-value {
+            font-size: 1rem;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Remove Button */
+        .remove-btn {
+            border: none;
+            background: #dc3545;
+            color: white;
+            padding: 6px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .remove-btn:hover {
+            background: #c82333;
+        }
+
+        /* Total Summary */
+        .total-summary {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding-top: 20px;
+        }
+
+        /* Checkout Button */
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            background: #ffc107;
+            border: none;
+            border-radius: 12px;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkout-btn:hover {
+            background: #e0a800;
+            transform: scale(1.05);
+        }
+
+        /* Discount Banner */
+        .discount-banner {
+            text-align: center;
+            font-weight: bold;
+            padding: 12px;
+            background: #ffeb3b;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container cart-container">
+    <h2 class="cart-title"><i class="fa-solid fa-shopping-cart"></i> Your Shopping Cart</h2>
+
+    <!-- Discount Banner -->
+    <div class="discount-banner" id="discount-banner" style="display: none;">
+        🎉 Special Offer: 10% Off on Orders Above $50! 🎉
+    </div>
+
+    <div id="cart-items">
+        <!-- Cart items dynamically loaded here -->
+    </div>
+
+    <!-- Total Summary -->
+    <div class="total-summary">
+        <p>Subtotal: <span id="subtotal">$0.00</span></p>
+        <p>Discount: <span id="discount">$0.00</span></p>
+        <p>Total: <span id="total">$0.00</span></p>
+    </div>
+
+    <!-- Checkout Button -->
+    <button class="checkout-btn" onclick="proceedToCheckout()" title="Proceed to checkout and place your order">
+        <i class="fa-solid fa-credit-card"></i> Proceed to Checkout
+    </button>
+</div>
+
+<script>
+    let cart = [
+        { name: "Organic Apples", price: 3.99, quantity: 2.0, image: "https://source.unsplash.com/100x100/?apples" },
+        { name: "Fresh Oranges", price: 2.49, quantity: 3.0, image: "https://source.unsplash.com/100x100/?oranges" },
+        { name: "Bananas", price: 1.99, quantity: 1.5, image: "https://source.unsplash.com/100x100/?bananas" }
+    ];
+
+    function loadCart() {
+        const cartContainer = document.getElementById("cart-items");
+        cartContainer.innerHTML = "";
+
+        cart.forEach((item, index) => {
+            cartContainer.innerHTML += `
+                <div class="cart-item">
+                    <button class="remove-btn" onclick="removeItem(${index})" title="Remove item">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                    <img src="${item.image}" alt="${item.name}">
+                    <h5>${item.name}</h5>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="updateQuantity(${index}, -0.5)" title="Decrease quantity">-</button>
+                        <span class="quantity-value">${item.quantity.toFixed(1)} Kg</span>
+                        <button class="quantity-btn" onclick="updateQuantity(${index}, 0.5)" title="Increase quantity">+</button>
+                    </div>
+                    <p>$${(item.price * item.quantity).toFixed(2)}</p>
+                </div>
+            `;
+        });
+
+        updateTotals();
+    }
+
+    function updateQuantity(index, change) {
+        if (cart[index].quantity + change >= 0.5) {
+            cart[index].quantity += change;
+        } else {
+            cart.splice(index, 1);
+        }
+        loadCart();
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        loadCart();
+    }
+
+    function updateTotals() {
+        let subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        let discount = subtotal >= 50 ? subtotal * 0.1 : 0;
+        let total = subtotal - discount;
+
+        document.getElementById("subtotal").innerText = `$${subtotal.toFixed(2)}`;
+        document.getElementById("discount").innerText = `-$${discount.toFixed(2)}`;
+        document.getElementById("total").innerText = `$${total.toFixed(2)}`;
+
+        document.getElementById("discount-banner").style.display = subtotal >= 50 ? "block" : "none";
+    }
+
+    function proceedToCheckout() {
+        alert(cart.length === 0 ? "Your cart is empty. Add some products before proceeding!" : "Proceeding to checkout...");
+    }
+
+    document.addEventListener("DOMContentLoaded", loadCart);
+</script>
+
+</body>
+</html>

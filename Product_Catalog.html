@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Catalog | FRUTEE</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Header Styling */
+        .catalog-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #28a745;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        /* Search Bar Styling */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .search-bar {
+            width: 50%;
+            border-radius: 50px;
+            padding: 12px 20px;
+            border: 2px solid #28a745;
+            outline: none;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .search-bar:focus {
+            border-color: #218838;
+            box-shadow: 0 0 10px rgba(33, 136, 56, 0.3);
+        }
+        .search-btn {
+            background-color: #28a745;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            margin-left: 10px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .search-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        /* Category Buttons Styling */
+        .category-btn {
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-size: 15px;
+            font-weight: bold;
+            margin: 5px;
+            transition: 0.3s;
+        }
+        .category-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Product Cards */
+        .product-card {
+            position: relative;
+            height: 270px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 15px;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            margin-bottom: 25px;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .product-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 class="text-center catalog-title"><i class="fa-solid fa-store"></i> Product Catalog</h2>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="search-bar" class="search-bar" placeholder="🔍 Search for products..." onkeyup="filterProducts()">
+        <button class="search-btn" onclick="filterProducts()"><i class="fa-solid fa-search"></i></button>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="text-center">
+        <button class="btn btn-outline-dark category-btn" onclick="filterByCategory('all')">All</button>
+        <button class="btn btn-outline-success category-btn" onclick="filterByCategory('fruits')">🍎 Fruits</button>
+        <button class="btn btn-outline-warning category-btn" onclick="filterByCategory('vegetables')">🥕 Vegetables</button>
+        <button class="btn btn-outline-info category-btn" onclick="filterByCategory('grains')">🌾 Grains</button>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row mt-4" id="product-container">
+        <!-- Products will be loaded here dynamically -->
+    </div>
+</div>
+
+<script>
+    const products = [
+        { name: "Organic Apples", category: "fruits", price: 3.99, availability: "available", farmer: "Green Valley Farm", image: "https://source.unsplash.com/500x300/?apples" },
+        { name: "Fresh Oranges", category: "fruits", price: 2.49, availability: "available", farmer: "Sunny Citrus Farm", image: "https://source.unsplash.com/500x300/?oranges" },
+        { name: "Bananas", category: "fruits", price: 1.99, availability: "available", farmer: "Tropical Grove", image: "https://source.unsplash.com/500x300/?bananas" },
+        { name: "Carrots", category: "vegetables", price: 2.10, availability: "available", farmer: "Golden Harvest", image: "https://source.unsplash.com/500x300/?carrots" },
+        { name: "Tomatoes", category: "vegetables", price: 3.50, availability: "available", farmer: "Red Vineyards", image: "https://source.unsplash.com/500x300/?tomatoes" },
+        { name: "Wheat", category: "grains", price: 4.99, availability: "available", farmer: "Sunny Fields Farm", image: "https://source.unsplash.com/500x300/?wheat" },
+        { name: "Strawberries", category: "fruits", price: 5.49, availability: "available", farmer: "Berry Bliss Farm", image: "https://source.unsplash.com/500x300/?strawberries" },
+        { name: "Corn", category: "grains", price: 3.79, availability: "available", farmer: "Golden Cornfields", image: "https://source.unsplash.com/500x300/?corn" },
+        { name: "Broccoli", category: "vegetables", price: 3.25, availability: "available", farmer: "Healthy Greens Farm", image: "https://source.unsplash.com/500x300/?broccoli" },
+        { name: "Avocados", category: "fruits", price: 6.99, availability: "available", farmer: "California Avocado Growers", image: "https://source.unsplash.com/500x300/?avocado" }
+    ];
+
+    let currentCategory = "all";
+
+    function loadProducts() {
+        filterProducts();
+    }
+
+    function filterProducts() {
+        const searchText = document.getElementById("search-bar").value.toLowerCase();
+        const filteredProducts = products.filter(product => {
+            return (currentCategory === "all" || product.category === currentCategory) &&
+                product.name.toLowerCase().includes(searchText);
+        });
+
+        displayProducts(filteredProducts);
+    }
+
+    function filterByCategory(category) {
+        currentCategory = category;
+        filterProducts();
+    }
+
+    function displayProducts(products) {
+        const productContainer = document.getElementById("product-container");
+        productContainer.innerHTML = "";
+
+        products.forEach(product => {
+            const productCard = `
+                <div class="col-md-4">
+                    <div class="product-card" style="background-image: url('${product.image}');">
+                        <div class="product-overlay">
+                            <h5>${product.name}</h5>
+                            <p>$${product.price.toFixed(2)}/kg</p>
+                            <p>Farmer: ${product.farmer}</p>
+                            <button class="btn btn-success"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            productContainer.innerHTML += productCard;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", loadProducts);
+</script>
+
+</body>
+</html>
