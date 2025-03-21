@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Registration | FRUTEE</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .title-container {
+            text-align: center;
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .title-container h2 {
+            font-weight: bold;
+            font-size: 35px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .workshop-container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .workshop-card {
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .workshop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-badge {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+
+        .status-available { background-color: #4CAF50; color: white; }
+        .status-limited { background-color: #FFC107; color: black; }
+        .status-full { background-color: #DC3545; color: white; }
+
+        .btn-register {
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-register:hover {
+            transform: scale(1.05);
+        }
+
+        .price-badge {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2E7D32;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="title-container">
+        <h2><i class="fa-solid fa-seedling"></i> Agricultural Workshops</h2>
+        <p>Join exciting workshops and learn from the best farmers!</p>
+    </div>
+
+    <div class="workshop-container">
+        <div class="row" id="workshopList"></div>
+    </div>
+</div>
+
+<script>
+    let workshops = [
+        { id: 1, title: "Organic Farming Basics", date: "2025-04-05", spots: 10, price: 50 },
+        { id: 2, title: "Hydroponics & Greenhouses", date: "2025-04-10", spots: 2, price: 75 },
+        { id: 3, title: "Fruit Tree Grafting", date: "2025-04-15", spots: 0, price: 60 },
+        { id: 4, title: "Bee-Keeping for Beginners", date: "2025-04-20", spots: 5, price: 80 },
+        { id: 5, title: "Soil Regeneration Techniques", date: "2025-04-25", spots: 8, price: 65 }
+    ];
+
+    function loadWorkshops() {
+        const workshopList = document.getElementById("workshopList");
+        workshopList.innerHTML = "";
+
+        workshops.forEach(workshop => {
+            if (workshop.spots === 0) return; 
+
+            let statusClass = workshop.spots > 5 ? "status-available" :
+                              workshop.spots > 0 ? "status-limited" : "status-full";
+
+            let registerButton = workshop.spots > 0 
+                ? `<button class="btn btn-success btn-register" onclick="register(${workshop.id}, '${workshop.title}', ${workshop.price})">
+                    <i class="fa-solid fa-user-plus"></i> Register Now
+                   </button>`
+                : `<button class="btn btn-secondary" disabled>Full</button>`;
+
+            let workshopCard = `
+                <div class="col-md-6 mb-3">
+                    <div class="card workshop-card p-3">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fa-solid fa-leaf"></i> ${workshop.title}</h5>
+                            <p class="card-text"><i class="fa-solid fa-calendar"></i> Date: ${workshop.date}</p>
+                            <p class="card-text price-badge"><i class="fa-solid fa-dollar-sign"></i> ${workshop.price} per participant</p>
+                            <p class="card-text"><span class="status-badge ${statusClass}">
+                                ${workshop.spots} spots available
+                            </span></p>
+                            ${registerButton}
+                        </div>
+                    </div>
+                </div>
+            `;
+            workshopList.innerHTML += workshopCard;
+        });
+    }
+
+    function register(workshopId, workshopTitle, workshopPrice) {
+        localStorage.setItem("selectedWorkshop", workshopTitle);
+        localStorage.setItem("workshopPrice", workshopPrice);
+        window.location.href = "workshop-registration-form.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => loadWorkshops());
+</script>
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatBot AI | FRUTEE</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-box {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .message {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .user-message {
+            background: #4CAF50;
+            color: white;
+            justify-content: flex-end;
+            align-self: flex-end;
+            text-align: right;
+            border-radius: 10px 0px 10px 10px;
+        }
+
+        .bot-message {
+            background: #394867;
+            color: white;
+            justify-content: flex-start;
+            border-radius: 0px 10px 10px 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-top: 10px;
+        }
+
+        .quick-replies {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quick-reply {
+            background: #FFD700;
+            color: black;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .quick-reply:hover {
+            background: #FFC107;
+        }
+
+        .bot-typing {
+            color: #FFD700;
+            font-style: italic;
+            animation: fadeBlink 1s infinite alternate;
+        }
+
+        @keyframes fadeBlink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <h2><i class="fa-solid fa-robot"></i> ChatBot AI</h2>
+
+    <!-- תיבת הצ'אט -->
+    <div class="chat-box" id="chatBox"></div>
+
+    <!-- שדה הקלט -->
+    <div class="input-group">
+        <input type="text" class="form-control" id="userInput" placeholder="Ask me anything...">
+        <button class="btn btn-warning" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+
+    <!-- קיצורי דרך -->
+    <div class="quick-replies">
+        <div class="quick-reply" onclick="quickReply('Where is my order?')">📦 Where is my order?</div>
+        <div class="quick-reply" onclick="quickReply('What are today’s discounts?')">💰 Today's Discounts</div>
+        <div class="quick-reply" onclick="quickReply('I need support')">📞 Need Support</div>
+    </div>
+</div>
+
+<script>
+    let chatHistory = JSON.parse(localStorage.getItem("chatHistory")) || [];
+
+    function loadChatHistory() {
+        let chatBox = document.getElementById("chatBox");
+        chatBox.innerHTML = "";
+        chatHistory.forEach(msg => addMessage(msg.type, msg.text, false));
+    }
+
+    function sendMessage() {
+        let inputField = document.getElementById("userInput");
+        let message = inputField.value.trim();
+        if (message === "") return;
+
+        addMessage("user", message);
+        inputField.value = "";
+
+        setTimeout(() => {
+            addBotTyping();
+            setTimeout(() => {
+                removeBotTyping();
+                let botResponse = getBotResponse(message);
+                addMessage("bot", botResponse);
+            }, 1000);
+        }, 500);
+    }
+
+    function quickReply(text) {
+        document.getElementById("userInput").value = text;
+        sendMessage();
+    }
+
+    function addMessage(type, text, saveToHistory = true) {
+        let chatBox = document.getElementById("chatBox");
+        let messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", type === "user" ? "user-message" : "bot-message");
+        messageDiv.innerHTML = type === "bot" ? `<i class="fa-solid fa-robot me-2"></i> ${text}` : `${text} <i class="fa-solid fa-user ms-2"></i>`;
+        
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        if (saveToHistory) {
+            chatHistory.push({ type, text });
+            localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+        }
+    }
+
+    function addBotTyping() {
+        let chatBox = document.getElementById("chatBox");
+        let typingDiv = document.createElement("div");
+        typingDiv.classList.add("message", "bot-message", "bot-typing");
+        typingDiv.id = "botTyping";
+        typingDiv.innerHTML = `<i class="fa-solid fa-robot me-2"></i> Typing...`;
+        chatBox.appendChild(typingDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeBotTyping() {
+        let typingDiv = document.getElementById("botTyping");
+        if (typingDiv) typingDiv.remove();
+    }
+
+    function getBotResponse(message) {
+        message = message.toLowerCase();
+
+        if (message.includes("order")) {
+            return "Checking your order... 📦 One moment!";
+        } else if (message.includes("discounts") || message.includes("sale")) {
+            return "Today's special offer: 🍎 20% off on organic apples! 🎉";
+        } else {
+            return "I'm not sure about that. Can you clarify? 🤔";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadChatHistory);
+</script>
+
+</body>
+</html>

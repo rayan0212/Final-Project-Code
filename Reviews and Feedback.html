@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews & Feedback | FRUTEE</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .review-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 40px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        h2 {
+            font-weight: bold;
+            color: #2E7D32;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            gap: 10px;
+        }
+
+        .star {
+            color: #ccc;
+            transition: 0.3s;
+        }
+
+        .star:hover, .star.selected {
+            color: #FFD700;
+            transform: scale(1.1);
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        .btn-submit {
+            font-weight: bold;
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+            color: white;
+            transition: 0.3s;
+            padding: 12px;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(45deg, #2E7D32, #1B5E20);
+            transform: scale(1.05);
+        }
+
+        .reviews-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .review-item {
+            padding: 15px;
+            background: #f1f8e9;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .review-rating {
+            color: #FFD700;
+            font-size: 20px;
+        }
+
+        .review-text {
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        .average-rating {
+            font-size: 22px;
+            font-weight: bold;
+            color: #FFA000;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .upload-label {
+            cursor: pointer;
+            font-weight: bold;
+            color: #2E7D32;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .upload-label:hover {
+            color: #1B5E20;
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-container img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="review-container">
+        <h2>Share Your Experience</h2>
+        
+        <!-- ממוצע דירוגים -->
+        <p class="average-rating">⭐ Average Rating: <span id="averageRating">0</span>/5</p>
+
+        <!-- דירוג כוכבים -->
+        <div class="star-rating" id="starRating">
+            <i class="fa-solid fa-star star" data-value="1"></i>
+            <i class="fa-solid fa-star star" data-value="2"></i>
+            <i class="fa-solid fa-star star" data-value="3"></i>
+            <i class="fa-solid fa-star star" data-value="4"></i>
+            <i class="fa-solid fa-star star" data-value="5"></i>
+        </div>
+
+        <!-- שדה חוות דעת -->
+        <textarea class="form-control my-3" id="reviewText" placeholder="Write your review (max 200 chars)" maxlength="200" required></textarea>
+
+        <!-- העלאת תמונות -->
+        <input type="file" id="imageUpload" class="d-none" accept="image/*" multiple>
+        <label for="imageUpload" class="upload-label"><i class="fa-solid fa-image"></i> Upload images (optional)</label>
+        <div id="imagePreviewContainer" class="image-container"></div>
+
+        <button class="btn btn-submit mt-3" onclick="submitReview()">Submit Review</button>
+
+        <!-- חוות דעת קודמות -->
+        <div class="reviews-list mt-4" id="reviewsList"></div>
+    </div>
+</div>
+
+<script>
+    let reviews = [];
+    let currentRating = 0;
+    let uploadedImages = [];
+
+    // ⭐ מערכת דירוג כוכבים
+    document.querySelectorAll(".star").forEach(star => {
+        star.addEventListener("click", function() {
+            currentRating = parseInt(this.getAttribute("data-value"));
+            updateStarRating(currentRating);
+        });
+    });
+
+    function updateStarRating(rating) {
+        document.querySelectorAll(".star").forEach(star => {
+            let starValue = parseInt(star.getAttribute("data-value"));
+            star.classList.toggle("selected", starValue <= rating);
+        });
+    }
+
+    // 📸 העלאת תמונות מרובות
+    document.getElementById("imageUpload").addEventListener("change", function(event) {
+        const files = event.target.files;
+        uploadedImages = [];
+        document.getElementById("imagePreviewContainer").innerHTML = "";
+
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImages.push(e.target.result);
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                document.getElementById("imagePreviewContainer").appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    function submitReview() {
+        let reviewText = document.getElementById("reviewText").value.trim();
+        
+        if (currentRating === 0) {
+            alert("Please select a rating!");
+            return;
+        }
+
+        if (reviewText.length === 0) {
+            alert("Please write a review before submitting!");
+            return;
+        }
+
+        let newReview = {
+            rating: currentRating,
+            text: reviewText,
+            images: uploadedImages
+        };
+
+        reviews.push(newReview);
+        document.getElementById("reviewText").value = "";
+        document.getElementById("imageUpload").value = "";
+        document.getElementById("imagePreviewContainer").innerHTML = "";
+        uploadedImages = [];
+        currentRating = 0;
+        updateStarRating(0);
+        displayReviews();
+    }
+
+    function displayReviews() {
+        let reviewsList = document.getElementById("reviewsList");
+        reviewsList.innerHTML = "";
+
+        let totalRating = 0;
+
+        reviews.forEach(review => {
+            totalRating += review.rating;
+            let imagesHtml = review.images.map(img => `<img src="${img}" class="image-preview">`).join("");
+
+            reviewsList.innerHTML += `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-rating">${"⭐".repeat(review.rating)}</div>
+                    </div>
+                    <p class="review-text">${review.text}</p>
+                    <div class="image-container">${imagesHtml}</div>
+                </div>
+            `;
+        });
+
+        document.getElementById("averageRating").innerText = (totalRating / reviews.length).toFixed(1);
+    }
+</script>
+
+</body>
+</html>
