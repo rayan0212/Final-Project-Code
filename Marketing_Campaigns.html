@@ -159,6 +159,15 @@
             justify-content: space-between;
         }
 
+        .discount-input {
+        width: 80px; /* קביעת רוחב קטן יותר */
+        text-align: center; /* מיושר למרכז */
+        padding: 5px;
+        margin: auto;
+    }
+
+
+
 
 
 
@@ -306,45 +315,133 @@
         loadCampaigns();
         this.reset();
     });
-
     function loadCampaigns() {
-        let campaignTable = document.getElementById("campaignTable");
-        campaignTable.innerHTML = "";
-        campaigns.forEach((campaign, index) => {
-            campaignTable.innerHTML += `
-                <tr>
-                    <td><input type="text" value="${campaign.name}" onchange="editCampaign(${index}, 'name', this.value)" class="form-control"></td>
-                    <td><input type="number" value="${campaign.discount}" onchange="editCampaign(${index}, 'discount', this.value)" class="form-control"></td>
-                    <td>${campaign.startDate}</td>
-                    <td>${campaign.endDate}</td>
-                    <td>${campaign.active ? 'Active' : 'Inactive'}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm" onclick="toggleCampaign(${index})">Toggle</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteCampaign(${index})">Delete</button>
-                    </td>
-                </tr>`;
-        });
-        updateChart();
+    let campaignTable = document.getElementById("campaignTable");
+    campaignTable.innerHTML = "";
+
+    campaigns.forEach((campaign, index) => {
+        campaignTable.innerHTML += `
+            <tr id="row${index}">
+                <td><input type="text" value="${campaign.name}" class="form-control" disabled></td>
+                <td><input type="number" value="${campaign.discount}" class="form-control discount-input" disabled></td>
+                
+                <!-- Start Date Column -->
+                <td id="startDateCell${index}">
+                    <span id="startDateText${index}">${campaign.startDate}</span>
+                    <input type="date" id="startDateInput${index}" value="${campaign.startDate}" class="form-control d-none">
+                </td>
+                
+                <!-- End Date Column -->
+                <td id="endDateCell${index}">
+                    <span id="endDateText${index}">${campaign.endDate}</span>
+                    <input type="date" id="endDateInput${index}" value="${campaign.endDate}" class="form-control d-none">
+                </td>
+
+                <td>${campaign.active ? 'Active' : 'Inactive'}</td>
+
+                <td id="actions-${index}" class="action-buttons">
+                    <button class="btn btn-warning btn-sm edit-btn" onclick="enableEditing(${index})" data-index="${index}">
+                        <i class="bi bi-pencil"></i> <!-- אייקון עריכה -->
+                    </button>
+                    
+                    <button class="btn btn-danger btn-sm delete-btn" onclick="confirmDelete(${index})" data-index="${index}">
+                        <i class="bi bi-trash"></i> <!-- אייקון מחיקה -->
+                    </button>
+
+                    <button class="btn toggle-btn" onclick="toggleCampaign(${index})" 
+                        style="background-color: #FFC107; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; color: black;">
+                        TOGGLE
+                    </button>
+                </td>
+            </tr>`;
+    });
+    updateChart();
+}
+
+// הצגת הודעת אישור לפני מחיקה
+function confirmDelete(index) {
+    let confirmation = confirm("Are you sure you want to delete this campaign?");
+    if (confirmation) {
+        deleteCampaign(index);
     }
+}
 
-    function editCampaign(index, field, value) {
-        campaigns[index][field] = value;
-        updateChart();
-    }
+// מחיקת הקמפיין
+function deleteCampaign(index) {
+    campaigns.splice(index, 1);
+    loadCampaigns();
+}
 
-    function toggleCampaign(index) {
-        campaigns[index].active = !campaigns[index].active;
-        loadCampaigns();
-    }
+// הפעלת מצב עריכה כאשר לוחצים על כפתור העריכה
+function enableEditing(index) {
+    document.getElementById(`startDateText${index}`).classList.add("d-none");
+    document.getElementById(`endDateText${index}`).classList.add("d-none");
 
-    function deleteCampaign(index) {
-        campaigns.splice(index, 1);
-        loadCampaigns();
-    }
+    document.getElementById(`startDateInput${index}`).classList.remove("d-none");
+    document.getElementById(`endDateInput${index}`).classList.remove("d-none");
+
+    // החלפת כפתורים לכפתורי "שמירה" ו-"ביטול"
+    document.getElementById(`actions-${index}`).innerHTML = `
+        <button class="btn btn-success btn-sm save-btn" onclick="saveChanges(${index})" data-index="${index}">
+            <i class="bi bi-check"></i> <!-- אייקון שמירה -->
+        </button>
+        <button class="btn btn-secondary btn-sm cancel-btn" onclick="cancelEditing(${index})" data-index="${index}">
+            <i class="bi bi-x"></i> <!-- אייקון ביטול -->
+        </button>
+    `;
+}
+
+// שמירת שינויים
+function saveChanges(index) {
+    campaigns[index].startDate = document.getElementById(`startDateInput${index}`).value;
+    campaigns[index].endDate = document.getElementById(`endDateInput${index}`).value;
+    
+    restoreDefaultButtons(index);
+}
+
+// ביטול עריכה
+function cancelEditing(index) {
+    restoreDefaultButtons(index);
+}
+
+// החזרת הכפתורים למצב רגיל
+function restoreDefaultButtons(index) {
+    let campaign = campaigns[index];
+
+    document.getElementById(`startDateText${index}`).textContent = campaign.startDate;
+    document.getElementById(`endDateText${index}`).textContent = campaign.endDate;
+
+    document.getElementById(`startDateText${index}`).classList.remove("d-none");
+    document.getElementById(`endDateText${index}`).classList.remove("d-none");
+
+    document.getElementById(`startDateInput${index}`).classList.add("d-none");
+    document.getElementById(`endDateInput${index}`).classList.add("d-none");
+
+    document.getElementById(`actions-${index}`).innerHTML = `
+        <button class="btn btn-warning btn-sm edit-btn" onclick="enableEditing(${index})" data-index="${index}">
+            <i class="bi bi-pencil"></i> <!-- אייקון עריכה -->
+        </button>
+        
+        <button class="btn btn-danger btn-sm delete-btn" onclick="confirmDelete(${index})" data-index="${index}">
+            <i class="bi bi-trash"></i> <!-- אייקון מחיקה -->
+        </button>
+        
+        <button class="btn toggle-btn" onclick="toggleCampaign(${index})" 
+            style="background-color: #FFC107; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; color: black;">
+            TOGGLE
+        </button>
+    `;
+}
+
+// שינוי מצב פעיל/לא פעיל של הקמפיין
+function toggleCampaign(index) {
+    campaigns[index].active = !campaigns[index].active;
+    loadCampaigns();
+}
+
+document.addEventListener("DOMContentLoaded", loadCampaigns);
 
 
-
-    document.addEventListener("DOMContentLoaded", loadCampaigns);
 
 
 </script>

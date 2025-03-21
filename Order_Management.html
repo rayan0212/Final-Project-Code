@@ -122,6 +122,33 @@
         .status-pending { color: orange; font-weight: bold; }
         .status-cancelled { color: red; font-weight: bold; }
 
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    width: 30%;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.close {
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
     </style>
 </head>
 <body>
@@ -229,126 +256,208 @@
         </div>
     </div>
 
+<!-- Cancellation Reason Modal -->
+<div id="cancelModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Cancellation Reason</h3>
+        <textarea id="cancelReason" placeholder="Enter the reason for cancellation..."></textarea>
+        <button onclick="confirmCancel()">Submit</button>
+    </div>
+</div>
+
+  
+
 <script>
 
-    // אלמנטים לטבלאות וסינון
-    const orderTable = document.getElementById("orderTable");
-    const visitTable = document.getElementById("visitTable");
-    const statusFilter = document.getElementById("statusFilter");
+// Elements for tables and filtering
+const orderTable = document.getElementById("orderTable");
+const visitTable = document.getElementById("visitTable");
+const statusFilter = document.getElementById("statusFilter");
 
-    // נתוני הזמנות
-    let orders = [
-        { id: "1001", product: "Organic Apples", status: "Confirmed" },
-        { id: "1002", product: "Strawberries", status: "Pending" },
-        { id: "1003", product: "Lettuce", status: "Cancelled" },
-        { id: "1004", product: "Bananas", status: "Confirmed" },
-        { id: "1005", product: "Grapes", status: "Pending" },
-        { id: "1006", product: "Mangoes", status: "Pending" },
-        { id: "1007", product: "Blueberries", status: "Confirmed" },
-        { id: "1008", product: "Tomatoes", status: "Cancelled" },
-        { id: "1009", product: "Oranges", status: "Confirmed" }
-    ];
+// Orders data
+let orders = [
+    { id: "1001", product: "Organic Apples", status: "Confirmed" },
+    { id: "1002", product: "Strawberries", status: "Pending" },
+    { id: "1003", product: "Lettuce", status: "Cancelled" },
+    { id: "1004", product: "Bananas", status: "Confirmed" },
+    { id: "1005", product: "Grapes", status: "Pending" },
+    { id: "1006", product: "Mangoes", status: "Pending" },
+    { id: "1007", product: "Blueberries", status: "Confirmed" },
+    { id: "1008", product: "Tomatoes", status: "Cancelled" },
+    { id: "1009", product: "Oranges", status: "Confirmed" }
+];
 
-    // נתוני ביקורים
-    let visits = [
-        { id: "V1001", name: "John Doe", date: "2025-03-20", time: "10:00 AM", people: 5, status: "Pending" },
-        { id: "V1002", name: "Sarah Smith", date: "2025-03-21", time: "12:00 PM", people: 8, status: "Confirmed" },
-        { id: "V1003", name: "Michael Brown", date: "2025-03-22", time: "09:30 AM", people: 3, status: "Pending" },
-        { id: "V1004", name: "Emma Johnson", date: "2025-03-23", time: "02:00 PM", people: 10, status: "Cancelled" },
-        { id: "V1005", name: "James Wilson", date: "2025-03-24", time: "11:00 AM", people: 7, status: "Pending" }
-    ];
+// Visits data
+let visits = [
+    { id: "V1001", name: "John Doe", date: "2025-03-20", time: "10:00 AM", people: 5, status: "Pending" },
+    { id: "V1002", name: "Sarah Smith", date: "2025-03-21", time: "12:00 PM", people: 8, status: "Confirmed" },
+    { id: "V1003", name: "Michael Brown", date: "2025-03-22", time: "09:30 AM", people: 3, status: "Pending" },
+    { id: "V1004", name: "Emma Johnson", date: "2025-03-23", time: "02:00 PM", people: 10, status: "Cancelled" },
+    { id: "V1005", name: "James Wilson", date: "2025-03-24", time: "11:00 AM", people: 7, status: "Pending" }
+];
 
-    // פונקציה לסינון נתונים לפי סטטוס
-    function applyFilter() {
-        const selectedStatus = statusFilter.value;
+// Apply filter based on selected status
+function applyFilter() {
+    const selectedStatus = statusFilter.value;
+    loadOrders(selectedStatus);
+    loadVisits(selectedStatus);
+}
 
-        loadOrders(selectedStatus);
-        loadVisits(selectedStatus);
-    }
+// Load orders with status filtering
+function loadOrders(status = "All") {
+    orderTable.innerHTML = "";
 
-    // טעינת הזמנות לפי סטטוס
-    function loadOrders(status = "All") {
-        orderTable.innerHTML = "";
+    let filteredOrders = orders.filter(order => status === "All" || order.status === status);
 
-        let filteredOrders = orders.filter(order => status === "All" || order.status === status);
+    filteredOrders.forEach((order, index) => {
+        let isCancelled = order.status === "Cancelled";
 
-        filteredOrders.forEach((order, index) => {
-            orderTable.innerHTML += `
-                <tr>
-                    <td>${order.id}</td>
-                    <td>${order.product}</td>
-                    <td><span class="status-${order.status.toLowerCase()}">${order.status}</span></td>
-                    <td>
-                        <button class="btn btn-success btn-sm btn-custom" onclick="updateStatus('orders', ${index}, 'Confirmed')">
-                            <i class="bi bi-check-circle"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm btn-custom" onclick="updateStatus('orders', ${index}, 'Cancelled')">
-                            <i class="bi bi-x-circle"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    // טעינת ביקורים לפי סטטוס
-    function loadVisits(status = "All") {
-        visitTable.innerHTML = "";
-
-        let filteredVisits = visits.filter(visit => status === "All" || visit.status === status);
-
-        filteredVisits.forEach((visit, index) => {
-            visitTable.innerHTML += `
-                <tr>
-                    <td>${visit.id}</td>
-                    <td>${visit.name}</td>
-                    <td>${visit.date}</td>
-                    <td>${visit.time}</td>
-                    <td>${visit.people}</td>
-                    <td><span class="status-${visit.status.toLowerCase()}">${visit.status}</span></td>
-                    <td>
-                        <button class="btn btn-success btn-sm btn-custom" onclick="updateStatus('visits', ${index}, 'Confirmed')">
-                            <i class="bi bi-check-circle"></i>
-                        </button>
-                        <button class="btn btn-danger btn-sm btn-custom" onclick="updateStatus('visits', ${index}, 'Cancelled')">
-                            <i class="bi bi-x-circle"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    // עדכון סטטוס של ביקור או הזמנה
-    function updateStatus(type, index, newStatus) {
-        if (type === "orders") {
-            orders[index].status = newStatus;
-        } else {
-            visits[index].status = newStatus;
-        }
-        applyFilter();
-    }
-
-    // טוען נתונים כשהדף נטען
-    document.addEventListener("DOMContentLoaded", () => {
-        applyFilter();
+        orderTable.innerHTML += `
+            <tr>
+                <td>${order.id}</td>
+                <td>${order.product}</td>
+                <td><span class="status-${order.status.toLowerCase()}">${order.status}</span></td>
+                <td>
+                    <button class="btn btn-success btn-sm btn-custom" 
+                            onclick="updateStatus('orders', ${index}, 'Confirmed')"
+                            ${isCancelled ? "disabled" : ""}>
+                        <i class="bi bi-check-circle"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm btn-custom" 
+                            onclick="openCancelModal('${order.id}', 'order')"
+                            ${isCancelled ? "disabled" : ""}>
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
     });
+}
 
+// Load visits with status filtering
+function loadVisits(status = "All") {
+    visitTable.innerHTML = "";
 
+    let filteredVisits = visits.filter(visit => status === "All" || visit.status === status);
 
-    new Chart(document.getElementById('salesChart'), {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-            datasets: [{
-                label: 'Sales ($)',
-                data: [800, 1200, 1800, 2400, 3000],
-                borderColor: '#4CAF50',
-                backgroundColor: 'rgba(76, 175, 80, 0.3)',
-                fill: true
-            }]
-        }
+    filteredVisits.forEach((visit, index) => {
+        let isCancelled = visit.status === "Cancelled";
+
+        visitTable.innerHTML += `
+            <tr>
+                <td>${visit.id}</td>
+                <td>${visit.name}</td>
+                <td>${visit.date}</td>
+                <td>${visit.time}</td>
+                <td>${visit.people}</td>
+                <td><span class="status-${visit.status.toLowerCase()}">${visit.status}</span></td>
+                <td>
+                    <button class="btn btn-success btn-sm btn-custom" 
+                            onclick="updateStatus('visits', ${index}, 'Confirmed')"
+                            ${isCancelled ? "disabled" : ""}>
+                        <i class="bi bi-check-circle"></i>
+                    </button>
+                    <button class="btn btn-danger btn-sm btn-custom" 
+                            onclick="openCancelModal('${visit.id}', 'visit')"
+                            ${isCancelled ? "disabled" : ""}>
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
     });
+}
+
+// Update order/visit status
+function updateStatus(type, index, newStatus) {
+    if (type === "orders") {
+        orders[index].status = newStatus;
+    } else {
+        visits[index].status = newStatus;
+    }
+    applyFilter();
+}
+
+// Handle cancel modal
+let currentId = null;
+let cancelType = "";
+
+function openCancelModal(id, type) {
+    currentId = id;
+    cancelType = type;
+    document.getElementById("cancelModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("cancelModal").style.display = "none";
+    document.getElementById("cancelReason").value = ""; 
+}
+
+// Confirm cancellation for both orders and visits
+function confirmCancel() {
+    let reason = document.getElementById("cancelReason").value;
+    if (reason.trim() === "") {
+        alert("Please enter a reason for cancellation.");
+        return;
+    }
+
+    if (cancelType === "visit") {
+        let visitIndex = visits.findIndex(v => v.id === currentId);
+        if (visitIndex !== -1) {
+            visits[visitIndex].status = "Cancelled";
+            alert(`Visit ${currentId} has been cancelled. Reason: ${reason}`);
+            loadVisits();
+        }
+    } else if (cancelType === "order") {
+        let orderIndex = orders.findIndex(o => o.id === currentId);
+        if (orderIndex !== -1) {
+            orders[orderIndex].status = "Cancelled";
+            alert(`Order ${currentId} has been cancelled. Reason: ${reason}`);
+            loadOrders();
+        }
+    }
+
+    closeModal();
+}
+
+// Load data when page loads
+document.addEventListener("DOMContentLoaded", () => {
+    applyFilter();
+});
+
+// Chart initialization
+new Chart(document.getElementById('salesChart'), {
+    type: 'line',
+    data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        datasets: [{
+            label: 'Sales ($)',
+            data: [800, 1200, 1800, 2400, 3000],
+            borderColor: '#4CAF50',
+            backgroundColor: 'rgba(76, 175, 80, 0.3)',
+            fill: true
+        }]
+    }
+});
+
+// Highlight an order when opened via URL
+document.addEventListener("DOMContentLoaded", function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get("order");
+
+    if (orderId) {
+        const orderRow = document.querySelector(`tr[data-order-id="${orderId}"]`);
+        if (orderRow) {
+            orderRow.style.backgroundColor = "#ffeb3b"; // Highlight in yellow
+            orderRow.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }
+});
+
+
+
+
 
 
 </script>

@@ -10,11 +10,14 @@
 
     <style>
     /* ✅ רקע כללי */
-    body {
+    html , body {
         font-family: 'Arial', sans-serif;
         background: #e8f5e9; /* רקע ירוק בהיר */
         background-attachment: fixed;
         overflow-x: hidden;
+        height: 100%;
+        margin: 0;
+        padding: 0;
     }
 
         /* ✅ סגנון ה-Sidebar */
@@ -89,15 +92,14 @@
             color: #cddc39; /* צהוב ירקרק */
         }
 
-    /* ✅ תוכן ראשי */
-    .content {
-        margin-left: 270px; /* התאמה לסיידבר */
-        padding: 20px;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+            min-height: 100vh;
+            display: block; /* משנה את זה מ-flex כדי לא לגרום לכרטיסייה לרדת */
+            position: relative;
+        }
+
 
     /* ✅ כרטיסיות */
     .card {
@@ -107,6 +109,7 @@
         background: #ffffff; /* לבן */
         border: 1px solid #c8e6c9; /* גבול ירוק בהיר */
         padding: 20px;
+        margin-bottom: 50px; 
     }
 
     .card h4 {
@@ -119,62 +122,28 @@
         transform: scale(1.02);
     }
 
-    /* ✅ טבלאות */
-    .table-container {
-        max-height: 300px;
-        overflow-y: auto;
-        border-radius: 10px;
-    }
 
-    .table th {
-        background: #388e3c; /* ירוק כהה */
-        color: white;
-    }
+    .gallery-card {
+            height: 400px; /* גובה קבוע לכרטיסייה */
+        }
+        .fixed-image {
+            height: 300px; /* גובה קבוע לתמונות */
+            object-fit: cover; /* חיתוך התמונה כדי שתתאים לכרטיסייה */
+            cursor: pointer;
+        }
 
-    .table td {
-        background: #f1f8e9; /* ירוק בהיר */
-    }
+        .table-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
 
-    /* ✅ כפתורים */
-    .btn-custom {
-        background-color: #388e3c; /* ירוק כהה */
-        color: white;
-        border-radius: 8px;
-        transition: 0.3s;
-    }
-
-    .btn-custom:hover {
-        background-color: #2e7d32; /* ירוק מעט בהיר יותר */
-        transform: scale(1.05);
-    }
-
-    /* ✅ תיבות גלילה */
-    .scroll-container {
-        max-height: 250px;
-        overflow-y: auto;
-        border: 1px solid #ddd;
-        padding: 10px;
-        border-radius: 8px;
-        background: #ffffff;
-    }
-
-    /* ✅ שגיאות */
-    .error-message {
-        color: red;
-        font-size: 0.85rem;
-        display: none;
-    }
-
-    .error-border {
-        border: 2px solid red !important;
-    }
-    .feedback-container {
-        margin-left: 270px; /* התאמה לסיידבר */
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+        .table-image:hover {
+            transform: scale(1.1);
+        }
 
 
     </style>
@@ -220,10 +189,8 @@
     <!-- Main Content -->
     <div class="content">
         <h2 class="text-success">Feedback And Photos</h2>
-
         <div class="row mt-4 ">
-            <!-- Customer Feedback -->
-            <div class="col-lg-6" feedback-container"> 
+            <div class="col-lg-6 "> 
                 <div class="card p-3">
                     <h4>Customer Feedback</h4>
                     <div class="scroll-container">
@@ -231,8 +198,39 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
+        
+
+                <div class="col-lg-6">
+                    <div class="card p-3">
+                        <h4>Image List</h4>
+                
+                        <!-- כפתור להעלאת תמונה -->
+                        <label for="imageUpload" class="btn btn-success mb-3">
+                            <i class="bi bi-plus-lg"></i> Add Image
+                        </label>
+                        <input type="file" id="imageUpload" accept="image/*" class="d-none">
+                
+                        <!-- טבלה להצגת תמונות -->
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>File Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="imageTableBody">
+                                <!-- התמונות יתווספו כאן -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </div>
+        
     </div>
+
 
 <script>
         // נתוני פידבק לדוגמה
@@ -258,6 +256,123 @@
             feedbackList.appendChild(li);
         });
     }
+    
+    function openModal(img) {
+            document.getElementById("modalImage").src = img.src;
+            document.getElementById("imageModal").style.display = "flex";
+        }
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+
+        document.getElementById("imageUpload").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            addImageToTable(e.target.result, file.name);
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function addImageToTable(imageSrc, fileName) {
+    const tableBody = document.getElementById("imageTableBody");
+
+    const row = document.createElement("tr");
+
+    // תא של התמונה
+    const imgCell = document.createElement("td");
+    const img = document.createElement("img");
+    img.src = imageSrc;
+    img.classList.add("table-image");
+    img.onclick = () => openModal(imageSrc);
+    imgCell.appendChild(img);
+
+    // תא של שם הקובץ
+    const nameCell = document.createElement("td");
+    nameCell.textContent = fileName;
+
+    // תא של כפתור מחיקה
+    const actionCell = document.createElement("td");
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.classList.add("btn", "btn-danger", "btn-sm");
+    deleteBtn.onclick = () => row.remove();
+
+    actionCell.appendChild(deleteBtn);
+
+    // הוספת השורה לטבלה
+    row.appendChild(imgCell);
+    row.appendChild(nameCell);
+    row.appendChild(actionCell);
+    tableBody.appendChild(row);
+    img.onclick = () => openFullImage(imageSrc);
+
+}
+
+function openFullImage(imageSrc) {
+    // בדיקה אם תמונה כבר פתוחה, אם כן - לא ליצור חדשה
+    if (document.getElementById("fullImage")) return;
+
+    // יצירת שכבת רקע שקופה לסגירה
+    const overlay = document.createElement("div");
+    overlay.id = "overlay";
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
+    overlay.style.zIndex = "999";
+    overlay.style.background = "transparent"; // רקע שקוף
+    overlay.onclick = closeFullImage;
+
+    // יצירת אלמנט תמונה
+    const fullImage = document.createElement("img");
+    fullImage.src = imageSrc;
+    fullImage.id = "fullImage";
+    fullImage.style.position = "fixed";
+    fullImage.style.top = "50%";
+    fullImage.style.left = "50%";
+    fullImage.style.transform = "translate(-50%, -50%)";
+    fullImage.style.maxWidth = "90vw";
+    fullImage.style.maxHeight = "90vh";
+    fullImage.style.zIndex = "1000";
+    fullImage.style.borderRadius = "10px";
+    fullImage.style.boxShadow = "0px 0px 15px rgba(0, 0, 0, 0.2)";
+    
+    // יצירת כפתור סגירה
+    const closeButton = document.createElement("button");
+    closeButton.textContent = "×";
+    closeButton.style.position = "fixed";
+    closeButton.style.top = "15px";
+    closeButton.style.right = "15px";
+    closeButton.style.fontSize = "24px";
+    closeButton.style.fontWeight = "bold";
+    closeButton.style.color = "green";
+    closeButton.style.border = "none";
+    closeButton.style.borderRadius = "50%";
+    closeButton.style.width = "35px";
+    closeButton.style.height = "35px";
+    closeButton.style.cursor = "pointer";
+    closeButton.style.zIndex = "1001";
+    closeButton.onclick = closeFullImage;
+
+    // פונקציה לסגירת התמונה
+    function closeFullImage() {
+        fullImage.remove();
+        overlay.remove();
+        closeButton.remove();
+    }
+
+    // הוספת התמונה והשכבה לעמוד
+    document.body.appendChild(overlay);
+    document.body.appendChild(fullImage);
+    document.body.appendChild(closeButton);
+}
+
+
+
 
 </script>
 

@@ -99,6 +99,14 @@
         justify-content: space-between;
     }
 
+    .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch; /* מחייב שכל הכרטיסיות יתאימו בגובה */
+    }
+
+
+
     /* ✅ כרטיסיות */
     .card {
         border-radius: 10px;
@@ -107,6 +115,10 @@
         background: #ffffff; /* לבן */
         border: 1px solid #c8e6c9; /* גבול ירוק בהיר */
         padding: 20px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        
     }
 
     .card h4 {
@@ -183,6 +195,63 @@
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
+    .weather-icon {
+    width: 40px;  /* רוחב מותאם */
+    height: 40px; /* גובה מותאם */
+    }
+
+    .bg-warning {
+    background-color: #fff3cd !important; /* צהוב בהיר */
+    }
+
+    .bg-info {
+        background-color: #d1ecf1 !important; /* כחול בהיר */
+    }
+
+    .bg-danger {
+        background-color: #f8d7da !important; /* אדום בהיר */
+    }
+
+    .bg-success {
+        background-color: #d4edda !important; /* ירוק בהיר */
+    }
+
+    .list-group-item {
+        border: none; /* ביטול גבולות נוספים */
+        margin-bottom: 5px; /* ריווח בין הודעות */
+    }
+
+    .inventory-item {
+    transition: background-color 0.3s ease-in-out;
+    padding: 10px;
+    border-radius: 5px;
+    }
+
+    .inventory-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .text-danger {
+        color: #dc3545 !important; /* אדום - נגמר מהמלאי */
+    }
+
+    .text-warning {
+        color: #ffc107 !important; /* צהוב - מלאי נמוך */
+    }
+
+    .modal-body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+
+
+
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -243,7 +312,9 @@
                 <div class="card p-3">
                     <h4>Weather Forecast</h4>
                     <div class="scroll-container">
-                        <ul class="list-group" id="weatherList"></ul>
+                        <ul class="list-group" id="weatherList">
+                            <li class="list-group-item">Loading weather data...</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -253,12 +324,13 @@
         <div class="row mt-4">
             <div class="col-lg-6">
                 <div class="card p-3">
-                    <h4>Recent Orders</h4>
+                    <h4>Inventory Updates</h4>
                     <div class="scroll-container">
-                        <ul class="list-group" id="ordersList"></ul>
+                        <ul class="list-group" id="inventoryList"></ul>
                     </div>
                 </div>
             </div>
+            
 
             <div class="col-lg-6">
                 <div class="card p-3">
@@ -287,19 +359,97 @@
         </div>
     </div>
 
+    <!-- Modal for Notifications -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Notification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Notification details will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="modalLink" href="#" class="btn btn-primary d-none">View Order</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Product Details -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Product Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" alt="Product Image" class="img-fluid mb-3">
+                <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+                <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
-    const orders = [
-        { id: "1001", product: "Organic Apples", status: "Confirmed" },
-        { id: "1002", product: "Strawberries", status: "Pending" },
-        { id: "1003", product: "Lettuce", status: "Cancelled" },
-        { id: "1004", product: "Bananas", status: "Confirmed" },
-        { id: "1005", product: "Grapes", status: "Pending" },
-        { id: "1006", product: "Blueberries", status: "Confirmed" },
-        { id: "1007", product: "Avocados", status: "Pending" },
-        { id: "1008", product: "Pineapples", status: "Shipped" },
-        { id: "1009", product: "Tomatoes", status: "Delivered" },
-        { id: "1010", product: "Mangoes", status: "Cancelled" }
-    ];
+const inventoryUpdates = [
+    { product: "Bananas", category: "Fruits", stock: 2, status: "Low Stock", description: "Fresh organic bananas, rich in potassium.", image:"img/banana-7828351_1280.jpg"},
+    { product: "Strawberries", category: "Fruits", stock: 0, status: "Out of Stock", description: "Sweet and fresh strawberries.", image: "img/strawberries-4375991_1280.jpg" },
+    { product: "Lettuce", category: "Vegetables", stock: 5, status: "Low Stock", description: "Crispy and fresh lettuce.", image: "img/lettuce-isolated-5307334_1280.jpg" },
+    { product: "Tomatoes", category: "Vegetables", stock: 0, status: "Out of Stock", description: "Juicy red tomatoes.", image: "img/tomatoes-1280859_1280.jpg"},
+    { product: "Avocados", category: "Fruits", stock: 1, status: "Low Stock", description: "Creamy, organic avocados.", image: "img/avocado-8498520_1280.jpg" }
+];
+
+document.addEventListener("DOMContentLoaded", function () {
+    const inventoryList = document.getElementById("inventoryList");
+
+    // ניקוי הרשימה כדי למנוע כפילות
+    inventoryList.innerHTML = "";
+
+    inventoryUpdates.forEach(item => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("list-group-item", "inventory-item");
+        listItem.style.cursor = "pointer"; // מאפשר לחיצה
+
+        // הגדרת צבעים לפי סטטוס
+        let statusClass = "";
+        if (item.status === "Out of Stock") statusClass = "text-danger fw-bold";
+        else if (item.status === "Low Stock") statusClass = "text-warning fw-bold";
+
+        // הצגת המידע בצורה ברורה
+        listItem.innerHTML = `
+            <strong>${item.product}</strong> - 
+            <span class="${statusClass}">${item.status}</span> <br>
+            <small class="text-muted">Stock: ${item.stock} units left</small>
+        `;
+
+        // לחיצה תפתח את המודל עם פרטי המוצר
+        listItem.addEventListener("click", function () {
+            document.getElementById("modalTitle").innerText = item.product;
+            document.getElementById("modalCategory").innerText = item.category;
+            document.getElementById("modalDescription").innerText = item.description;
+            document.getElementById("modalImage").src = item.image;
+
+            // פתיחת ה-Modal
+            const modal = new bootstrap.Modal(document.getElementById("productModal"));
+            modal.show();
+        });
+
+        inventoryList.appendChild(listItem);
+    });
+});
+
+
+
 
     const notifications = [
         { message: "Order #1003 was cancelled.", type: "warning" },
@@ -385,29 +535,93 @@
         });
     }
 
-    // נתוני מזג אוויר לדוגמה (יש לשלב API אמיתי בהמשך)
-    const weatherData = [
-        { date: "March 20", temp: "22°C", condition: "Sunny", icon: "☀️" },
-        { date: "March 21", temp: "18°C", condition: "Cloudy", icon: "☁️" },
-        { date: "March 22", temp: "16°C", condition: "Rainy", icon: "🌧️" },
-        { date: "March 23", temp: "20°C", condition: "Partly Cloudy", icon: "⛅" },
-        { date: "March 24", temp: "25°C", condition: "Sunny", icon: "☀️" }
-    ];
-
-    function loadWeather() {
-        const weatherList = document.getElementById("weatherList");
-        weatherData.forEach(day => {
-            weatherList.innerHTML += `<li class="list-group-item">
-                <strong>${day.date}</strong> - ${day.temp} ${day.icon} (${day.condition})
-            </li>`;
-        });
-    }
 
     // טוען את הנתונים לאחר שהדף נטען
     document.addEventListener("DOMContentLoaded", () => {
         loadVisits();
         loadWeather();
     });
+
+    const apiKey = "d6cd84c66ce5f222ef282ba6ed3f40e4"; // ה-API Key שלך
+    const city = "Tel Aviv,IL"; // ניתן לשנות לעיר הרצויה
+    const url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`;
+    
+
+    fetch(url)
+    .then(response => {
+        if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const weatherList = document.getElementById("weatherList");
+        weatherList.innerHTML = ""; // ניקוי הנתונים הקודמים
+
+    // הצגת תחזית לכל 24 שעות (קפיצה של 8 אינדקסים כי כל 3 שעות זה אינדקס)
+    for (let i = 0; i < data.list.length; i += 8) {
+      const forecast = data.list[i];
+      const date = new Date(forecast.dt * 1000).toLocaleDateString();
+      const temp = Math.round(forecast.main.temp);
+      const condition = forecast.weather[0].description;
+      const icon = forecast.weather[0].icon;
+
+      // יצירת אלמנט רשימה
+      const listItem = document.createElement("li");
+      listItem.classList.add("list-group-item", "d-flex", "align-items-center");
+      listItem.innerHTML = `
+        <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${condition}" class=" weather-icon me-2" />
+        <strong>${date}</strong> - ${temp}°C <span class="ms-2 text-capitalize">(${condition})</span>
+      `;
+
+      weatherList.appendChild(listItem);
+    }
+  })
+  .catch(error => {
+    console.error("Error fetching weather data:", error);
+    document.getElementById("weatherList").innerHTML = "<li class='list-group-item text-danger'>Failed to load weather data</li>";
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const notificationList = document.getElementById("notificationsList");
+
+    // ניקוי הרשימה לפני שמוסיפים התראות חדשות
+    notificationList.innerHTML = ""; 
+
+    notifications.forEach(notification => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("list-group-item", `bg-${notification.type}`, "notification-item");
+        listItem.innerHTML = notification.message;
+        listItem.style.cursor = "pointer";
+
+        // הוספת אירוע קליק כדי לפתוח את המודל
+        listItem.addEventListener("click", function () {
+            document.getElementById("modalTitle").innerText = "Notification Details";
+            document.getElementById("modalBody").innerText = notification.message;
+
+            const modalLink = document.getElementById("modalLink");
+            const orderMatch = notification.message.match(/Order #(\d+)/);
+
+            if (orderMatch) {
+                const orderId = orderMatch[1];
+                modalLink.href = `orders.html?order=${orderId}`;
+                modalLink.classList.remove("d-none"); // מציג את הכפתור
+            } else {
+                modalLink.classList.add("d-none"); // מסתיר את הכפתור
+            }
+
+            // פתיחת המודל
+            const modal = new bootstrap.Modal(document.getElementById("notificationModal"));
+            modal.show();
+        });
+
+        notificationList.appendChild(listItem);
+    });
+});
+
+
+
+
 
 </script>
 

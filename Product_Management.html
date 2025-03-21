@@ -221,6 +221,12 @@
                   <div class="error-message" id="productPriceError">Enter a valid price.</div>
               </div>
 
+              <div class="col-md-2">
+                <label class="form-label">Stock *</label>
+                <input type="number" id="productStock" class="form-control" min="0">
+                <div class="error-message" id="productStockError">Enter a valid stock quantity.</div>
+            </div>
+
               <!-- קטגוריה -->
               <div class="col-md-3">
                   <label class="form-label">Category</label>
@@ -248,26 +254,27 @@
       </form>
   </div>
 
-  <!-- טבלת מוצרים -->
-  <div class="card p-4">
-      <h4>Product List</h4>
-      <div class="table-container">
-          <table class="table table-striped">
-              <thead>
-                  <tr>
-                      <th>Name</th>
-                      <th>Price</th>
-                      <th>Category</th>
-                      <th>Availability</th>
-                      <th>Actions</th>
-                  </tr>
-              </thead>
-              <tbody id="productTable">
-                  <!-- מוצרים יוצגו כאן באופן דינמי -->
-              </tbody>
-          </table>
-      </div>
-  </div>
+    <!-- טבלת מוצרים -->
+    <div class="card p-4">
+        <h4>Product List</h4>
+        <div class="table-container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Availability</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productTable">
+                    <!-- מוצרים יוצגו כאן באופן דינמי -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 
@@ -278,74 +285,83 @@
         const addProductForm = document.getElementById("addProductForm");
 
         let products = [
-            { name: "Organic Apples", price: 3.5, category: "Fruits", availability: "Available" },
-            { name: "Fresh Lettuce", price: 2.0, category: "Vegetables", availability: "Available" },
-            { name: "Brown Rice", price: 1.5, category: "Grains", availability: "Available" }
-        ];
+        { name: "Organic Apples", price: 3.5, category: "Fruits", availability: "Available", stock: 20 },
+        { name: "Fresh Lettuce", price: 2.0, category: "Vegetables", availability: "Available", stock: 15 },
+        { name: "Brown Rice", price: 1.5, category: "Grains", availability: "Available", stock: 30 }
+    ];
 
-        function validateField(id, errorId) {
-            const field = document.getElementById(id);
-            const error = document.getElementById(errorId);
+    function validateField(id, errorId) {
+    const field = document.getElementById(id);
+    const error = document.getElementById(errorId);
 
-            if (!field.value.trim()) {
-                field.classList.add("error-border");
-                error.style.display = "block";
-                return false;
-            } else {
-                field.classList.remove("error-border");
-                error.style.display = "none";
-                return true;
-            }
-        }
+    if (!field.value.trim()) {
+        field.classList.add("error-border");
+        error.style.display = "block";
+        return false;
+    } else {
+        field.classList.remove("error-border");
+        error.style.display = "none";
+        return true;
+    }
+}
 
-        addProductForm.addEventListener("submit", function(event) {
-            event.preventDefault();
-            let isValid = true;
+addProductForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    let isValid = true;
 
-            isValid &= validateField("productName", "productNameError");
-            isValid &= validateField("productPrice", "productPriceError");
+    isValid &= validateField("productName", "productNameError");
+    isValid &= validateField("productPrice", "productPriceError");
+    isValid &= validateField("productStock", "productStockError"); // בדיקה ל-Stock
 
-            let price = parseFloat(document.getElementById("productPrice").value);
-            if (isNaN(price) || price <= 0) {
-                document.getElementById("productPrice").classList.add("error-border");
-                document.getElementById("productPriceError").innerText = "Enter a valid price.";
-                document.getElementById("productPriceError").style.display = "block";
-                isValid = false;
-            }
+    let price = parseFloat(document.getElementById("productPrice").value);
+    if (isNaN(price) || price <= 0) {
+        document.getElementById("productPrice").classList.add("error-border");
+        document.getElementById("productPriceError").innerText = "Enter a valid price.";
+        document.getElementById("productPriceError").style.display = "block";
+        isValid = false;
+    }
 
-            if (!isValid) return;
+    let stock = parseInt(document.getElementById("productStock").value); // בדיקת stock
+    if (isNaN(stock) || stock < 0) {
+        document.getElementById("productStock").classList.add("error-border");
+        document.getElementById("productStockError").innerText = "Enter a valid stock quantity.";
+        document.getElementById("productStockError").style.display = "block";
+        isValid = false;
+    }
 
-            let name = document.getElementById("productName").value;
-            let category = document.getElementById("productCategory").value;
-            let availability = document.getElementById("productAvailability").value;
+    if (!isValid) return;
 
-            products.push({ name, price, category, availability });
-            loadProducts();
-            
-            addProductForm.reset();
-            document.querySelectorAll(".error-border").forEach(el => el.classList.remove("error-border"));
-            document.querySelectorAll(".error-message").forEach(el => el.style.display = "none");
-        });
+    let name = document.getElementById("productName").value;
+    let category = document.getElementById("productCategory").value;
+    let availability = document.getElementById("productAvailability").value;
+
+    products.push({ name, price, category, availability, stock }); // הוספת stock למוצר
+    loadProducts();
+    
+    addProductForm.reset();
+    document.querySelectorAll(".error-border").forEach(el => el.classList.remove("error-border"));
+    document.querySelectorAll(".error-message").forEach(el => el.style.display = "none");
+});
+
 
         function loadProducts() {
             let rows = "";
 
             products.forEach((product, index) => {
-                let formattedPrice = isNaN(product.price) ? "N/A" : `$${product.price.toFixed(2)}`;
-
                 rows += `
-                    <tr>
-                        <td>${product.name || "No Name"}</td>
-                        <td>${formattedPrice}</td>
-                        <td>${product.category || "Uncategorized"}</td>
-                        <td class="${product.availability === 'Available' ? 'text-success' : 'text-danger'}">
-                            ${product.availability || "Unknown"}
+                    <tr id="row-${index}">
+                        <td>${product.name}</td>
+                        <td id="price-${index}">$${product.price.toFixed(2)}</td>
+                        <td>${product.category}</td>
+                        <td id="availability-${index}" class="${product.availability === 'Available' ? 'text-success' : 'text-danger'}">
+                            ${product.availability}
                         </td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" onclick="editProduct(${index})">
+                        <td id="stock-${index}">${product.stock}</td>
+                        <td id="actions-${index}">
+                            <button class="btn btn-warning btn-sm edit-btn" data-index="${index}">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${index})">
+                            <button class="btn btn-danger btn-sm delete-btn" data-index="${index}">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
@@ -354,6 +370,78 @@
             });
 
             productTable.innerHTML = rows;
+        }
+
+        // Event delegation - מאזין אירועים לכפתורים
+        productTable.addEventListener("click", function (event) {
+            if (event.target.closest(".edit-btn")) {
+                let index = event.target.closest(".edit-btn").getAttribute("data-index");
+                editProduct(index);
+            }
+            if (event.target.closest(".delete-btn")) {
+                let index = event.target.closest(".delete-btn").getAttribute("data-index");
+                deleteProduct(index);
+            }
+        });
+
+        function editProduct(index) {
+            let product = products[index];
+
+            document.getElementById(`price-${index}`).innerHTML = `<input type="number" id="edit-price-${index}" value="${product.price}" class="form-control" step="0.01">`;
+            document.getElementById(`availability-${index}`).innerHTML = `
+                <select id="edit-availability-${index}" class="form-control">
+                    <option value="Available" ${product.availability === "Available" ? "selected" : ""}>Available</option>
+                    <option value="Unavailable" ${product.availability === "Unavailable" ? "selected" : ""}>Unavailable</option>
+                </select>
+            `;
+            document.getElementById(`stock-${index}`).innerHTML = `<input type="number" id="edit-stock-${index}" value="${product.stock}" class="form-control" step="1">`;
+
+            document.getElementById(`actions-${index}`).innerHTML = `
+                <button class="btn btn-success btn-sm save-btn" data-index="${index}">
+                    <i class="bi bi-check"></i>
+                </button>
+                <button class="btn btn-secondary btn-sm cancel-btn" data-index="${index}">
+                    <i class="bi bi-x"></i>
+                </button>
+            `;
+        }
+
+        productTable.addEventListener("click", function (event) {
+            if (event.target.closest(".save-btn")) {
+                let index = event.target.closest(".save-btn").getAttribute("data-index");
+                saveProduct(index);
+            }
+            if (event.target.closest(".cancel-btn")) {
+                loadProducts();
+            }
+        });
+
+        function saveProduct(index) {
+            let newPrice = parseFloat(document.getElementById(`edit-price-${index}`).value);
+            let newAvailability = document.getElementById(`edit-availability-${index}`).value;
+            let newStock = parseInt(document.getElementById(`edit-stock-${index}`).value);
+
+            if (isNaN(newPrice) || newPrice <= 0) {
+                alert("Invalid price!");
+                return;
+            }
+            if (isNaN(newStock) || newStock < 0) {
+                alert("Invalid stock quantity!");
+                return;
+            }
+
+            products[index].price = newPrice;
+            products[index].availability = newAvailability;
+            products[index].stock = newStock;
+
+            loadProducts();
+        }
+
+        function deleteProduct(index) {
+            if (confirm("Are you sure you want to delete " + products[index].name + "?")) {
+                products.splice(index, 1);
+                loadProducts();
+            }
         }
 
         loadProducts();
