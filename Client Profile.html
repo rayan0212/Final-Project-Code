@@ -1,240 +1,337 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile & Settings - FRUTEE</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            transition: background 0.3s, color 0.3s;
-        }
+  <meta charset="UTF-8">
+  <title>FRUTEE | My Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  
+  <style>
 
-        .dark-mode {
-            background: #121212 !important;
-            color: #f1f1f1 !important;
-        }
+    body {
+      background-color: #f4f4f4;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
 
-        .profile-container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            margin-top: 40px;
-            transition: background 0.3s, color 0.3s;
-        }
+    .box-item {
+        background-color: #fffdf7;
+        border-left: 5px solid #f4a259;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
 
-        .dark-mode .profile-container {
-            background: #1e1e1e;
-            color: #f1f1f1;
-            border: 1px solid #333;
-        }
 
-        .profile-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #28a745;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-            text-align: center;
-        }
+    .header {
+      background-color: #85bb65;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
 
-        .dark-mode .profile-title {
-            color: #66ff66;
-        }
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
 
-        .profile-pic-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .header p {
+      margin: 5px 0 0;
+      font-size: 16px;
+    }
 
-        .profile-pic {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid #28a745;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
+    .section-title {
+      margin-top: 40px;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-        .change-pic-btn {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
+    .info-section, .workshops-section {
+      padding: 0 50px;
+    }
 
-        .change-pic-btn:hover {
-            transform: scale(1.1);
-        }
+    .info-label {
+      font-weight: bold;
+      color: #555;
+    }
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+    .workshop-box {
+      background-color: #fffdf7;
+      border-left: 5px solid #f4a259;
+      padding: 20px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
 
-        .form-label {
-            font-weight: bold;
-        }
+    .badge-success {
+        background-color: #85bb65;
+    }
 
-        .required {
-            color: red;
-            font-weight: bold;
-        }
+    .badge-warning {
+        background-color: #ffc107;
+        color: #333;
+    }
 
-        .error-message {
-            color: red;
-            font-size: 0.9rem;
-            display: none;
-        }
+    .badge-primary {
+        background-color: #0d6efd;
+    }
 
-        .dark-mode .error-message {
-            color: #ff6666;
-        }
+    .badge-secondary {
+        background-color: #6c757d;
+    }
 
-        /* שדות טקסט */
-        input {
-            background: #ffffff;
-            color: black;
-            border: 1px solid #ccc;
-            transition: background 0.3s, color 0.3s;
-        }
+    .btn-edit {
+      background-color: #f4a259;
+      color: white;
+      font-weight: bold;
+    }
 
-        input::placeholder {
-            color: #666;
-        }
+    .btn-edit:hover {
+      background-color: #e18f3e;
+    }
 
-        .dark-mode input {
-            background: #252525;
-            color: #fff;
-            border: 1px solid #666;
-        }
+    input.form-control {
+      margin-bottom: 10px;
+    }
 
-        .dark-mode input::placeholder {
-            color: #bbb;
-        }
+  .feedback-box {
+    background-color: #fffdf7;
+    border-left: 5px solid #85bb65;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
 
-        .btn-save {
-            width: 100%;
-            padding: 12px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            transition: 0.3s;
-        }
+  .feedback-box textarea {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 6px;
+    resize: none;
+    margin-top: 10px;
+  }
 
-        .btn-save:hover {
-            background: #218838;
-            transform: scale(1.05);
-        }
+  .feedback-box button {
+    background-color: #f4a259;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-weight: bold;
+  }
 
-        .dark-mode .btn-save {
-            background: #66ff66;
-            color: black;
-        }
+  .feedback-box button:hover {
+    background-color: #e18f3e;
+  }
 
-        .dark-mode .btn-save:hover {
-            background: #55cc55;
-        }
+  .feedback-sent {
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+  }
 
-        .btn-dark-mode {
-            background: #222;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+    .footer {
+      background-color: #ffffff;
+      padding: 1rem 2rem;
+      text-align: center;
+      border-top: 1px solid #ccc;
+      margin-top: 3rem;
+      width: 100%;
+      }
 
-        .btn-dark-mode:hover {
-            background: #444;
-        }
+      .footer-links {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      padding: 0;
+      }
 
-        .dark-mode .btn-dark-mode {
-            background: #666;
-            color: black;
-        }
-
-        .address-container {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .dark-mode .address-container {
-            background: #252525;
-            border: 1px solid #444;
-        }
-    </style>
+      .footer-links a {
+      text-decoration: none;
+      color: #3ca64c;
+      font-weight: 500;
+      }
+  </style>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-<div class="container profile-container">
-    <h2 class="profile-title"><i class="fa-solid fa-user-circle"></i> Profile & Settings</h2>
 
-    <!-- Profile Picture -->
-    <div class="profile-pic-container">
-        <img src="https://via.placeholder.com/130" alt="Profile Picture" id="profile-pic" class="profile-pic">
-        <br>
-        <button class="btn btn-outline-success change-pic-btn" onclick="changeProfilePic()" title="Change your profile picture">
-            <i class="fa-solid fa-camera"></i> Change Picture
-        </button>
-        <input type="file" id="pic-upload" style="display: none;" accept="image/*" onchange="previewProfilePic(event)">
+      <!-- Header -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+          <a class="navbar-brand fw-bold text-success" href="#">FRUTEE</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="Client_DashBoard.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Shop</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-person"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="Client Profile.html">My Profile</a></li>
+                  <li><a class="dropdown-item" href="clientOrders.html">My Orders</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Sign Out</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#cartModal" onclick="renderCart()">
+                    <i class="bi bi-cart fs-4"></i>
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      0
+                    </span>
+                  </a>              
+              </li>                             
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
+        <!-- Cart Modal -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cartModalLabel">🛒 Your Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="cart-items">
+        <!-- Cart items will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <h5 class="me-auto">Total: <span id="cart-total">$0.00</span></h5>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button onclick="window.location.href='payment.html'" class="btn btn-success">Checkout</button>
+      </div>
     </div>
-
-    <!-- User Information -->
-    <div class="form-group">
-        <label class="form-label"><i class="fa-solid fa-user"></i> Full Name <span class="required">*</span></label>
-        <input type="text" class="form-control" id="full-name" placeholder="Enter your full name">
-    </div>
-
-    <div class="form-group">
-        <label class="form-label"><i class="fa-solid fa-phone"></i> Phone <span class="required">*</span></label>
-        <input type="text" class="form-control" id="phone" placeholder="+1234567890">
-        <p class="error-message" id="phone-error">Invalid phone number! Use format: +1234567890</p>
-    </div>
-
-    <div class="form-group">
-        <label class="form-label"><i class="fa-solid fa-envelope"></i> Email <span class="required">*</span></label>
-        <input type="email" class="form-control" id="email" placeholder="example@mail.com">
-        <p class="error-message" id="email-error">Invalid email format! Use format: example@mail.com</p>
-    </div>
-
-    <!-- Address Management -->
-    <div class="address-container">
-        <h5><i class="fa-solid fa-map-marker-alt"></i> Address <span class="required">*</span></h5>
-        <input type="text" class="form-control" id="address" placeholder="Enter your address">
-    </div>
-
-    <!-- Save Button -->
-    <button class="btn btn-save mt-3" onclick="saveProfile()" title="Save your profile settings">
-        <i class="fa-solid fa-save"></i> Save Changes
-    </button>
-
-    <!-- Dark Mode Toggle -->
-    <div class="dark-mode-toggle">
-        <button class="btn-dark-mode mt-3" onclick="toggleDarkMode()" title="Toggle dark mode">
-            <i class="fa-solid fa-moon"></i> Dark Mode
-        </button>
-    </div>
+  </div>
 </div>
 
-<script>
-    function toggleDarkMode() {
-        document.body.classList.toggle("dark-mode");
-    }
-</script>
+<!-- Header -->
+<div class="header">
+  <h1>🍊 Welcome, <span id="userName">Rayan</span></h1>
+  <p>Your personal FRUTEE profile</p>
+</div>
 
+<main class="flex-grow-1">
+
+<!-- Personal Info -->
+<div class="info-section">
+  <div class="section-title">👤 Personal Information</div>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <p class="info-label">Full Name:</p>
+      <p><span id="fullName">Rayan Ahmad</span></p>
+    </div>
+    <div class="col-md-6">
+      <p class="info-label">Email:</p>
+      <p><span id="email">rayan@example.com</span></p>
+    </div>
+    <div class="col-md-6">
+      <p class="info-label">Phone:</p>
+      <p><span id="phone">+972-54-1234567</span></p>
+    </div>
+    <div class="col-md-6">
+      <p class="info-label">Location:</p>
+      <p><span id="location">Nazareth</span></p>
+    </div>
+  </div>
+  <button class="btn btn-edit" id="editBtn" onclick="enableEdit()">Edit Profile</button>
+</div>
+
+</main>
+
+
+  <!-- Footer -->
+  <footer class="footer text-center py-4 border-top">
+    <p class="mb-1">&copy; 2025 FRUTEE. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+    </ul>
+  </footer>
+
+<script>
+
+function enableEdit() {
+  const fields = ['fullName', 'email', 'phone', 'location'];
+  fields.forEach(field => {
+    const value = document.getElementById(field).innerText;
+    document.getElementById(field).innerHTML = `<input type="text" class="form-control" id="input-${field}" value="${value}">`;
+  });
+
+  document.getElementById('editBtn').innerText = "Save Changes";
+  document.getElementById('editBtn').onclick = saveChanges;
+}
+
+function saveChanges() {
+  const fields = ['fullName', 'email', 'phone', 'location'];
+  fields.forEach(field => {
+    const newValue = document.getElementById(`input-${field}`).value;
+    document.getElementById(field).innerText = newValue;
+  });
+
+  document.getElementById('editBtn').innerText = "Edit Profile";
+  document.getElementById('editBtn').onclick = enableEdit;
+}
+
+  const userProfile = {
+    fullName: "Rayan Ahmad",
+    email: "rayan@example.com",
+    phone: "+972-54-1234567",
+    location: "Nazareth",
+
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("userName").innerText = userProfile.fullName;
+    document.getElementById("fullName").innerText = userProfile.fullName;
+    document.getElementById("email").innerText = userProfile.email;
+    document.getElementById("phone").innerText = userProfile.phone;
+    document.getElementById("location").innerText = userProfile.location;
+
+    renderWorkshops();
+    renderOrders();
+  });
+
+
+
+
+
+
+
+
+
+
+
+</script>
+<script src="js/cart.js"></script>
 </body>
 </html>

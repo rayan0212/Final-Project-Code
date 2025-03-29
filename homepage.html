@@ -142,10 +142,29 @@
             font-size: 1.1rem;
         }
 
-        /* Footer */
         footer {
-            margin-top: 50px;
-        }
+      background-color: #ffffff;
+      padding: 1rem 2rem;
+      text-align: center;
+      border-top: 1px solid #ccc;
+      margin-top: 3rem;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #3ca64c;
+      font-weight: 500;
+    }
+
+    
     </style>
 </head>
 
@@ -256,10 +275,14 @@
 
 
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center p-3">
-        <p>&copy; 2025 FRUTEE - All rights reserved.</p>
-    </footer>
+        <footer>
+            <p>© 2025 FRUTEE. All rights reserved.</p>
+            <ul class="footer-links">
+              <li><a href="#">Contact Us</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms of Use</a></li>
+            </ul>
+          </footer>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

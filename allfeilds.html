@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fruit Fields | FRUTEE</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <style>
+    body {
+      background: linear-gradient(to right, #f0f4f3, #e4f5ec);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .hero-grid-container {
+      padding: 40px 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, 200px);
+      gap: 15px;
+    }
+
+    .grid-item {
+      border-radius: 14px;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: 0.3s;
+    }
+
+    .grid-item:hover {
+      transform: scale(1.02);
+    }
+
+    /* Positioning */
+    .item1 {
+      grid-column: 1 / span 2;
+      grid-row: 1 / span 2;
+    }
+
+    .item2 {
+      grid-column: 3 / span 1;
+      grid-row: 1 / span 1;
+    }
+
+    .item3 {
+      grid-column: 4 / span 1;
+      grid-row: 1 / span 1;
+    }
+
+    .item4 {
+      grid-column: 3 / span 1;
+      grid-row: 2 / span 1;
+    }
+
+    .item5 {
+      grid-column: 4 / span 1;
+      grid-row: 2 / span 1;
+    }
+
+    @media (max-width: 768px) {
+      .hero-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(3, 180px);
+      }
+
+      .item1 {
+        grid-column: 1 / span 2;
+        grid-row: 1 / span 1;
+      }
+
+      .item2, .item3, .item4, .item5 {
+        grid-column: auto;
+        grid-row: auto;
+      }
+    }
+
+    /* --- FIELD CARDS --- */
+    .section-title {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    .field-card {
+  border-radius: 16px;
+  height: 250px;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.field-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.field-body h5 {
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  border-radius: 16px;
+}
+
+.field-body {
+  z-index: 2;
+}
+
+
+    .btn-view {
+      background-color: #ffffff;
+      color: #388e3c;
+      border: 2px solid #4caf50;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .btn-view:hover {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    #fieldSearch:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
+
+
+    .footer {
+        background-color: #ffffff;
+        padding: 1rem 2rem;
+        text-align: center;
+        border-top: 1px solid #ccc;
+        margin-top: 3rem;
+        width: 100%;
+        }
+
+        .footer-links {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 0.5rem;
+        padding: 0;
+        }
+
+        .footer-links a {
+        text-decoration: none;
+        color: #3ca64c;
+        font-weight: 500;
+        }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+  <div class="container">
+      <a class="navbar-brand fw-bold text-success" href="#">FRUTEE</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+          <a class="nav-link" href="Client_DashBoard.html">Home</a>
+          </li>
+          <li class="nav-item">
+          <a class="nav-link" href="Product_Catalog.html">Shop</a>
+          </li>
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="Client Profile.html">My Profile</a></li>
+              <li><a class="dropdown-item" href="clientOrders.html">My Orders</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Sign Out</a></li>
+          </ul>
+          </li>
+          <li class="nav-item">
+          <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#cartModal" onclick="renderCart()">
+              <i class="bi bi-cart fs-4"></i>
+              <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  0
+              </span>
+              </a>              
+          </li>               
+      </ul>
+      </div>
+  </div>
+  </nav>
+
+  <div class="container hero-grid-container">
+    <div class="hero-grid">
+
+      <div class="grid-item item1" style="background-image: url('img/BASKET.webp');"></div>
+      <div class="grid-item item2" style="background-image: url('photos/pexels-filipp-romanovski-297235844-17275906.jpg');"></div>
+      <div class="grid-item item3" style="background-image: url('img/free-photo-of-close-up-of-people-holding-mangos.jpeg');"></div>
+      <div class="grid-item item4" style="background-image: url('img/picking\ 2.jpeg');"></div>
+      <div class="grid-item item5" style="background-image: url('img/strawberries-4375991_1280.jpg');"></div>
+
+    </div>
+  </div>
+
+<!-- Fields Section -->
+<div class="container mb-5">
+  <div class="section-title text-center">
+    <h2><i class="fa-solid fa-seedling"></i> Explore Our Fruit Fields</h2>
+    <p class="text-muted">Choose your favorite field and view more details</p>
+  </div>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-6">
+      <div class="input-group shadow-sm">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa-solid fa-magnifying-glass text-success"></i>
+        </span>
+        <input 
+          type="text" 
+          id="fieldSearch" 
+          class="form-control border-start-0" 
+          placeholder="Search fields by name..." 
+          oninput="filterFields()"
+        >
+      </div>
+    </div>
+  </div>
+  
+  
+
+  <div class="row g-4" id="fieldList">
+
+    <!-- Field 1 -->
+    <div class="col-md-6 col-lg-4">
+      <div class="field-card d-flex align-items-center justify-content-center text-center text-white"
+           style="background-image: url('img/sidebar-1.jpg');">
+        <div class="overlay w-100 h-100 position-absolute top-0 start-0"></div>
+        <div class="field-body position-relative">
+          <h5>Sunny Strawberry Field</h5>
+          <a href="Sunny Strawberry Field.html" class="btn btn-light mt-2">View More</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Field 2 -->
+    <div class="col-md-6 col-lg-4">
+      <div class="field-card d-flex align-items-center justify-content-center text-center text-white"
+           style="background-image: url('img/Golden Apple Orchard.jpeg');">
+        <div class="overlay w-100 h-100 position-absolute top-0 start-0"></div>
+        <div class="field-body position-relative">
+          <h5>Golden Apple Orchard</h5>
+          <a href="Golden Apple Orchard.html" class="btn btn-light mt-2">View More</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Field 3 -->
+    <div class="col-md-6 col-lg-4">
+      <div class="field-card d-flex align-items-center justify-content-center text-center text-white"
+           style="background-image: url('img/Citrus Breeze Grove.jpeg');">
+        <div class="overlay w-100 h-100 position-absolute top-0 start-0"></div>
+        <div class="field-body position-relative">
+          <h5>Citrus Breeze Grove</h5>
+          <a href="Citrus Breeze Grove.html" class="btn btn-light mt-2">View More</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Field 4 -->
+    <div class="col-md-6 col-lg-4">
+      <div class="field-card d-flex align-items-center justify-content-center text-center text-white"
+           style="background-image: url('img/Fig Harmony Field.jpeg');">
+        <div class="overlay w-100 h-100 position-absolute top-0 start-0"></div>
+        <div class="field-body position-relative">
+          <h5>Fig Harmony Field</h5>
+          <a href="#" class="btn btn-light mt-2">View More</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+   <!-- Cart Modal -->
+   <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cartModalLabel">🛒 Your Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="cart-items">
+          <!-- Cart items will be loaded here -->
+        </div>
+        <div class="modal-footer">
+          <h5 class="me-auto">Total: <span id="cart-total">$0.00</span></h5>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button onclick="window.location.href='payment.html'" class="btn btn-success">Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+<a class="dropdown-item" href="Client Profile.html">My Profile</a>
+<!-- Footer -->
+<footer class="footer text-center py-4 border-top">
+  <p class="mb-1">&copy; 2025 FRUTEE. All rights reserved.</p>
+  <ul class="footer-links">
+    <li><a href="#">Contact Us</a></li>
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Terms of Use</a></li>
+  </ul>
+</footer>
+
+</body>
+
+<script>
+
+  function filterFields() {
+    const query = document.getElementById("fieldSearch").value.toLowerCase().trim();
+    const cards = document.querySelectorAll("#fieldList .field-card");
+
+    cards.forEach(card => {
+      const title = card.querySelector("h5").textContent.toLowerCase();
+      if (title.includes(query)) {
+        card.parentElement.style.display = "block";
+      } else {
+        card.parentElement.style.display = "none";
+      }
+    });
+  }
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/cart.js"></script>
+</html>

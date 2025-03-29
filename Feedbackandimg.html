@@ -93,57 +93,60 @@
         }
 
         .content {
-            margin-left: 270px;
-            padding: 20px;
-            min-height: 100vh;
-            display: block; /* משנה את זה מ-flex כדי לא לגרום לכרטיסייה לרדת */
-            position: relative;
-        }
+    margin-left: 270px;
+    padding: 20px;
+    min-height: 100vh; /* גובה מלא של הדף */
+    display: flex;
+    flex-direction: column;
+}
 
+/* ✅ מבטיח שהכרטיסיות ימלאו את הגובה */
+.full-height {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-    /* ✅ כרטיסיות */
-    .card {
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        flex: 1;
-        background: #ffffff; /* לבן */
-        border: 1px solid #c8e6c9; /* גבול ירוק בהיר */
-        padding: 20px;
-        margin-bottom: 50px; 
-    }
+/* ✅ כרטיסיות */
+.card {
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    flex-grow: 1; /* גורם לכרטיסיות להימתח לגובה */
+    background: #ffffff; /* לבן */
+    border: 1px solid #c8e6c9; /* גבול ירוק בהיר */
+    padding: 20px;
+    margin-bottom: 50px; 
+}
 
-    .card h4 {
-        font-weight: bold;
-        color: #1b5e20; /* כותרות ירוק כהה */
-        text-align: center;
-    }
+.card h4 {
+    font-weight: bold;
+    color: #1b5e20; /* כותרות ירוק כהה */
+    text-align: center;
+}
 
-    .card:hover {
-        transform: scale(1.02);
-    }
+.card:hover {
+    transform: scale(1.02);
+}
 
+/* ✅ תצוגת תמונות */
+.fixed-image {
+    height: 300px; /* גובה קבוע לתמונות */
+    object-fit: cover; /* חיתוך התמונה כדי שתתאים לכרטיסייה */
+    cursor: pointer;
+}
 
-    .gallery-card {
-            height: 400px; /* גובה קבוע לכרטיסייה */
-        }
-        .fixed-image {
-            height: 300px; /* גובה קבוע לתמונות */
-            object-fit: cover; /* חיתוך התמונה כדי שתתאים לכרטיסייה */
-            cursor: pointer;
-        }
+.table-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
 
-        .table-image {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .table-image:hover {
-            transform: scale(1.1);
-        }
+.table-image:hover {
+    transform: scale(1.1);
+}
 
 
     </style>
@@ -182,64 +185,66 @@
                 <i class="bi bi-chat-dots"></i> Feedback
             </a>
             
-            <a href="#" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            <a href="signIn.html" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
     </div>
     
-    <!-- Main Content -->
-    <div class="content">
-        <h2 class="text-success">Feedback And Photos</h2>
-        <div class="row mt-4 ">
-            <div class="col-lg-6 "> 
-                <div class="card p-3">
-                    <h4>Customer Feedback</h4>
-                    <div class="scroll-container">
-                        <ul class="list-group" id="feedbackList"></ul>
-                    </div>
-                </div>
-            </div>
-        </div> 
-        
+<!-- Main Content -->
+<div class="content">
+    <h2 class="text-success">Feedback And Photos</h2>
 
-                <div class="col-lg-6">
-                    <div class="card p-3">
-                        <h4>Image List</h4>
-                
-                        <!-- כפתור להעלאת תמונה -->
-                        <label for="imageUpload" class="btn btn-success mb-3">
-                            <i class="bi bi-plus-lg"></i> Add Image
-                        </label>
-                        <input type="file" id="imageUpload" accept="image/*" class="d-none">
-                
-                        <!-- טבלה להצגת תמונות -->
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Image</th>
-                                    <th>File Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="imageTableBody">
-                                <!-- התמונות יתווספו כאן -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-            </div>
+    <!-- ✅ שורה עם פידבק + רשימת תמונות -->
+    <div class="row mt-4 gap-4">
         
+        <!-- ✅ עמודת פידבק -->
+        <div class="col">
+            <div class="card p-3">
+                <h4>Customer Feedback</h4>
+                <div class="scroll-container">
+                    <ul class="list-group" id="feedbackList"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ עמודת רשימת תמונות -->
+        <div class="col">
+            <div class="card p-3">
+                <h4>Image List</h4>
+
+                <!-- כפתור הוספת תמונה -->
+                <label for="imageUpload" class="btn btn-success mb-3">
+                    <i class="bi bi-plus-lg"></i> Add Image
+                </label>
+                <input type="file" id="imageUpload" accept="image/*" class="d-none">
+
+                <!-- טבלה להצגת תמונות -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>File Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="imageTableBody">
+                        <!-- התמונות יתווספו כאן -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
+
 
 
 <script>
         // נתוני פידבק לדוגמה
-    const feedbacks = [
-        { text: "Amazing quality!", author: "John Doe" },
-        { text: "Fresh and delicious produce.", author: "Sarah Smith" },
-        { text: "Excellent service!", author: "Michael Johnson" },
-        { text: "Very satisfied with the delivery speed.", author: "Emma Brown" },
-        { text: "Highly recommended!", author: "David Wilson" }
+        const feedbacks = [
+        { text: "Amazing quality!", author: "John Doe", date: "2025-03-21" },
+        { text: "Fresh and delicious produce.", author: "Sarah Smith", date: "2025-03-20" },
+        { text: "Excellent service!", author: "Michael Johnson", date: "2025-03-18" },
+        { text: "Very satisfied with the delivery speed.", author: "Emma Brown", date: "2025-03-15" },
+        { text: "Highly recommended!", author: "David Wilson", date: "2025-03-10" }
     ];
 
     // טוען את הפידבק לאחר שהדף נטען
@@ -248,14 +253,21 @@
     });
 
     function loadFeedback() {
-        const feedbackList = document.getElementById("feedbackList");
-        feedbacks.forEach(feedback => {
-            const li = document.createElement("li");
-            li.classList.add("list-group-item");
-            li.textContent = `"${feedback.text}" - ${feedback.author}`;
-            feedbackList.appendChild(li);
-        });
-    }
+    const feedbackList = document.getElementById("feedbackList");
+    feedbackList.innerHTML = ""; // מנקה קודם את הרשימה כדי למנוע כפילויות
+
+    feedbacks.forEach(feedback => {
+        const li = document.createElement("li");
+        li.classList.add("list-group-item");
+
+        // עיצוב הפידבק עם תאריך למטה
+        li.innerHTML = `<strong>"${feedback.text}"</strong> - ${feedback.author} <br>
+                        <small class="text-muted">${feedback.date}</small>`;
+
+        feedbackList.appendChild(li);
+    });
+}
+
     
     function openModal(img) {
             document.getElementById("modalImage").src = img.src;
@@ -370,6 +382,8 @@ function openFullImage(imageSrc) {
     document.body.appendChild(fullImage);
     document.body.appendChild(closeButton);
 }
+
+
 
 
 

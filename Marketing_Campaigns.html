@@ -209,7 +209,7 @@
                 <i class="bi bi-chat-dots"></i> Feedback
             </a>
 
-            <a href="#" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            <a href="signIn.html" title="Log out from your account"><i class="bi bi-box-arrow-right"></i> Logout</a>
         </div>
     </div>
     
@@ -323,7 +323,12 @@
         campaignTable.innerHTML += `
             <tr id="row${index}">
                 <td><input type="text" value="${campaign.name}" class="form-control" disabled></td>
-                <td><input type="number" value="${campaign.discount}" class="form-control discount-input" disabled></td>
+                
+                <!-- Discount Column -->
+                <td id="discountCell${index}">
+                    <span id="discountText${index}">${campaign.discount}%</span>
+                    <input type="number" id="discountInput${index}" value="${campaign.discount}" class="form-control d-none">
+                </td>
                 
                 <!-- Start Date Column -->
                 <td id="startDateCell${index}">
@@ -341,24 +346,22 @@
 
                 <td id="actions-${index}" class="action-buttons">
                     <button class="btn btn-warning btn-sm edit-btn" onclick="enableEditing(${index})" data-index="${index}">
-                        <i class="bi bi-pencil"></i> <!-- אייקון עריכה -->
+                        <i class="bi bi-pencil"></i>
                     </button>
-                    
                     <button class="btn btn-danger btn-sm delete-btn" onclick="confirmDelete(${index})" data-index="${index}">
-                        <i class="bi bi-trash"></i> <!-- אייקון מחיקה -->
+                        <i class="bi bi-trash"></i>
                     </button>
-
-                    <button class="btn toggle-btn" onclick="toggleCampaign(${index})" 
+                    <button class="btn toggle-btn" onclick="toggleCampaign(${index})"
                         style="background-color: #FFC107; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; color: black;">
                         TOGGLE
                     </button>
                 </td>
             </tr>`;
     });
+
     updateChart();
 }
 
-// הצגת הודעת אישור לפני מחיקה
 function confirmDelete(index) {
     let confirmation = confirm("Are you sure you want to delete this campaign?");
     if (confirmation) {
@@ -366,74 +369,81 @@ function confirmDelete(index) {
     }
 }
 
-// מחיקת הקמפיין
 function deleteCampaign(index) {
     campaigns.splice(index, 1);
     loadCampaigns();
 }
 
-// הפעלת מצב עריכה כאשר לוחצים על כפתור העריכה
 function enableEditing(index) {
     document.getElementById(`startDateText${index}`).classList.add("d-none");
     document.getElementById(`endDateText${index}`).classList.add("d-none");
+    document.getElementById(`discountText${index}`).classList.add("d-none");
 
     document.getElementById(`startDateInput${index}`).classList.remove("d-none");
     document.getElementById(`endDateInput${index}`).classList.remove("d-none");
+    document.getElementById(`discountInput${index}`).classList.remove("d-none");
 
-    // החלפת כפתורים לכפתורי "שמירה" ו-"ביטול"
     document.getElementById(`actions-${index}`).innerHTML = `
         <button class="btn btn-success btn-sm save-btn" onclick="saveChanges(${index})" data-index="${index}">
-            <i class="bi bi-check"></i> <!-- אייקון שמירה -->
+            <i class="bi bi-check"></i>
         </button>
         <button class="btn btn-secondary btn-sm cancel-btn" onclick="cancelEditing(${index})" data-index="${index}">
-            <i class="bi bi-x"></i> <!-- אייקון ביטול -->
+            <i class="bi bi-x"></i>
         </button>
     `;
 }
 
-// שמירת שינויים
 function saveChanges(index) {
     campaigns[index].startDate = document.getElementById(`startDateInput${index}`).value;
     campaigns[index].endDate = document.getElementById(`endDateInput${index}`).value;
-    
+    campaigns[index].discount = document.getElementById(`discountInput${index}`).value;
+
+    // עדכון התצוגה
+    document.getElementById(`startDateText${index}`).textContent = campaigns[index].startDate;
+    document.getElementById(`endDateText${index}`).textContent = campaigns[index].endDate;
+    document.getElementById(`discountText${index}`).textContent = campaigns[index].discount + "%";
+
     restoreDefaultButtons(index);
 }
 
-// ביטול עריכה
 function cancelEditing(index) {
+    // שחזור הערכים המקוריים לשדות הקלט
+    document.getElementById(`startDateInput${index}`).value = campaigns[index].startDate;
+    document.getElementById(`endDateInput${index}`).value = campaigns[index].endDate;
+    document.getElementById(`discountInput${index}`).value = campaigns[index].discount;
+
     restoreDefaultButtons(index);
 }
 
-// החזרת הכפתורים למצב רגיל
 function restoreDefaultButtons(index) {
     let campaign = campaigns[index];
 
     document.getElementById(`startDateText${index}`).textContent = campaign.startDate;
     document.getElementById(`endDateText${index}`).textContent = campaign.endDate;
+    document.getElementById(`discountText${index}`).textContent = campaign.discount + "%";
 
     document.getElementById(`startDateText${index}`).classList.remove("d-none");
     document.getElementById(`endDateText${index}`).classList.remove("d-none");
+    document.getElementById(`discountText${index}`).classList.remove("d-none");
 
     document.getElementById(`startDateInput${index}`).classList.add("d-none");
     document.getElementById(`endDateInput${index}`).classList.add("d-none");
+    document.getElementById(`discountInput${index}`).classList.add("d-none");
 
     document.getElementById(`actions-${index}`).innerHTML = `
         <button class="btn btn-warning btn-sm edit-btn" onclick="enableEditing(${index})" data-index="${index}">
-            <i class="bi bi-pencil"></i> <!-- אייקון עריכה -->
+            <i class="bi bi-pencil"></i>
         </button>
-        
         <button class="btn btn-danger btn-sm delete-btn" onclick="confirmDelete(${index})" data-index="${index}">
-            <i class="bi bi-trash"></i> <!-- אייקון מחיקה -->
+            <i class="bi bi-trash"></i>
         </button>
-        
-        <button class="btn toggle-btn" onclick="toggleCampaign(${index})" 
+        <button class="btn toggle-btn" onclick="toggleCampaign(${index})"
             style="background-color: #FFC107; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; color: black;">
             TOGGLE
         </button>
     `;
 }
 
-// שינוי מצב פעיל/לא פעיל של הקמפיין
 function toggleCampaign(index) {
     campaigns[index].active = !campaigns[index].active;
     loadCampaigns();

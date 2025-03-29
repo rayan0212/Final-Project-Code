@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fruit-Picking Farmers | FRUTEE</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <style>
+    body {
+      background: linear-gradient(to right, #f0f4f3, #e4f5ec);
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-title {
+      text-align: center;
+      margin: 40px 0 20px;
+    }
+
+    .section-title h2 {
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    .farmer-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: 0.3s;
+      overflow: hidden;
+    }
+
+    .farmer-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .farmer-img {
+      height: 200px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .btn-book {
+      background-color: #4caf50;
+      color: white;
+      font-weight: bold;
+    }
+
+    .btn-book:hover {
+      background-color: #388e3c;
+    }
+    .footer {
+        background-color: #ffffff;
+        padding: 1rem 2rem;
+        text-align: center;
+        border-top: 1px solid #ccc;
+        margin-top: 3rem;
+        width: 100%;
+        }
+
+        .footer-links {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 0.5rem;
+        padding: 0;
+        }
+
+        .footer-links a {
+        text-decoration: none;
+        color: #3ca64c;
+        font-weight: 500;
+        }
+
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+<div class="container">
+    <a class="navbar-brand fw-bold text-success" href="#">FRUTEE</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+        <a class="nav-link" href="Client_DashBoard.html">Home</a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" href="Product_Catalog.html">Shop</a>
+        </li>
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="Client Profile.html">My Profile</a></li>
+            <li><a class="dropdown-item" href="clientOrders.html">My Orders</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Sign Out</a></li>
+        </ul>
+        </li>
+        <li class="nav-item">
+        <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#cartModal" onclick="renderCart()">
+            <i class="bi bi-cart fs-4"></i>
+            <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                0
+            </span>
+            </a>              
+        </li>               
+    </ul>
+    </div>
+</div>
+</nav>
+
+<div class="container">
+  <div class="section-title">
+    <h2><i class="fa-solid fa-apple-whole"></i> Fruit-Picking Farmers</h2>
+    <p class="text-muted">Choose a farm and book your fruit-picking visit</p>
+  </div>
+
+  <div class="row" id="farmersList"></div>
+</div>
+
+<!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Book Your Visit</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p class="fw-bold text-success" id="farmNameTitle"></p>
+        <div class="mb-3">
+          <label for="visitDate" class="form-label">Select Date</label>
+          <input type="date" id="visitDate" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="visitTime" class="form-label">Select Time</label>
+          <select id="visitTime" class="form-select" required>
+            <option value="">-- Choose a time --</option>
+            <option value="09:00">09:00</option>
+            <option value="11:00">11:00</option>
+            <option value="13:00">13:00</option>
+            <option value="15:00">15:00</option>
+          </select>
+        </div>
+        <button class="btn btn-success w-100" onclick="confirmBooking()">Confirm Booking</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  
+  <!-- Cart Modal -->
+  <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cartModalLabel">🛒 Your Cart</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="cart-items">
+          <!-- Cart items will be loaded here -->
+        </div>
+        <div class="modal-footer">
+          <h5 class="me-auto">Total: <span id="cart-total">$0.00</span></h5>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button onclick="window.location.href='payment.html'" class="btn btn-success">Checkout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer text-center py-4 border-top">
+    <p class="mb-1">&copy; 2025 FRUTEE. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+    </ul>
+  </footer>
+
+<script>
+const farmers = [
+  {
+    id: 1,
+    name: "Apple Orchard",
+    location: "Majdal Shams",
+    crops: "Apples, Pears",
+    image: "img/Apples Pears.jpeg",
+  },
+  {
+    id: 2,
+    name: "Strawberry Field",
+    location: "Kfar Yarka",
+    crops: "Strawberries, Mint",
+    image: "img/Strawberries Mint.jpeg",
+  },
+  {
+    id: 3,
+    name: "Whispering Fields",
+    location: "Tira",
+    crops: "Oranges, Lemons, Grapefruits",
+    image: "img/orange-1117645_1280.jpg",
+  },
+  {
+    id: 4,
+    name: "Bloom Valley",
+    location: "Deir Hanna",
+    crops: "Figs, Pomegranates",
+    image: "img/Figs Pomegranates.jpeg",
+  }
+];
+
+
+function loadFarmers() {
+  const container = document.getElementById("farmersList");
+  container.innerHTML = "";
+  farmers.forEach(f => {
+    container.innerHTML += `
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="farmer-card">
+          <img src="${f.image}" class="farmer-img" alt="${f.name}">
+          <div class="p-3">
+            <h5 class="text-success">${f.name}</h5>
+            <p class="mb-1"><strong>Location:</strong> ${f.location}</p>
+            <p class="mb-3"><strong>Crops:</strong> ${f.crops}</p>
+            <button class="btn btn-book w-100" onclick="openBooking(${f.id})">Book a Visit</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+let selectedFarm = null;
+
+function openBooking(id) {
+  const farm = farmers.find(f => f.id === id);
+  if (!farm) return;
+  selectedFarm = farm;
+  document.getElementById("farmNameTitle").textContent = farm.name;
+  document.getElementById("visitDate").value = "";
+  document.getElementById("visitTime").value = "";
+  const modal = new bootstrap.Modal(document.getElementById("bookingModal"));
+  modal.show();
+}
+
+function confirmBooking() {
+  const date = document.getElementById("visitDate").value;
+  const time = document.getElementById("visitTime").value;
+  if (!date || !time) {
+    alert("Please select a valid date and time.");
+    return;
+  }
+  alert(`\uD83C\uDF3F Booking confirmed at ${selectedFarm.name} on ${date} at ${time}`);
+  const modal = bootstrap.Modal.getInstance(document.getElementById("bookingModal"));
+  modal.hide();
+}
+
+// Load on page
+loadFarmers();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>

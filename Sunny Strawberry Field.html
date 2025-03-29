@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunny Strawberry Field</title>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5fff7;
+    }
+
+    .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    .carousel-inner img {
+      object-fit: cover;
+      height: 500px;
+    }
+    .carousel-caption {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 1rem 2rem;
+      border-radius: 1rem;
+    }
+    .carousel-caption h5 {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .carousel-caption p {
+      font-size: 1.1rem;
+    }
+    .btn-custom {
+      background-color: #3ca64c;
+      color: white;
+      border: none;
+      transition: 0.3s;
+    }
+    .btn-custom:hover {
+      background-color: #2d8f3a;
+    }
+
+    .footer {
+    background-color: #ffffff;
+    padding: 1rem 2rem;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    margin-top: 3rem;
+    width: 100%;
+    }
+
+    .footer-links {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+    padding: 0;
+    }
+
+    .footer-links a {
+    text-decoration: none;
+    color: #3ca64c;
+    font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold text-success" href="#">FRUTEE</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="Client_DashBoard.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="Product_Catalog.html">Shop</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="Client Profile.html">My Profile</a></li>
+              <li><a class="dropdown-item" href="clientOrders.html">My Orders</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Sign Out</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#cartModal" onclick="renderCart()">
+                <i class="bi bi-cart fs-4"></i>
+                <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  0
+                </span>
+              </a>              
+          </li>               
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+    
+  <!-- Image Carousel with Promotion Captions -->
+  <div id="carouselImages" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="img/strawberry field3.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>🔥 Buy 1 Get 1 Free</h5>
+          <p>On all strawberry baskets – valid until March 31!</p>
+          <button class="btn btn-success">Claim Offer</button>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="img/strawberry field1.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>👨‍👩‍👧‍👦 Family Discount</h5>
+          <p>10% off for groups of 4 or more.</p>
+          <button class="btn btn-primary">Learn More</button>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="img/strawberry field2.jpg" class="d-block w-100" alt="...">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>🍓 Free Workshop Entry</h5>
+          <p>Book a tour and get a free spot in our jam-making workshop!</p>
+          <button class="btn btn-warning">Sign Up</button>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+  <!-- Hero Title -->
+  <div class="text-center py-4 bg-light">
+    <h1 class="display-4">Sunny Strawberry Field</h1>
+    <p class="lead">Sunny Field is the perfect place for family-friendly strawberry picking, farm tours, and sweet workshops!</p>
+  </div>
+
+  <div class="container py-5">
+    <!-- Schedule Table -->
+    <div class="section-title">🗓️ Upcoming Tours:</div>
+    <table class="table table-bordered text-center mb-5">
+      <thead class="table-success">
+        <tr>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Availability</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2025-03-28</td>
+          <td>10:00</td>
+          <td class="text-success">Available</td>
+          <td><button class="btn btn-custom" onclick="openBookingModal('2025-03-28', '10:00')">Book</button></td>
+        </tr>
+        <tr>
+          <td>2025-03-29</td>
+          <td>12:00</td>
+          <td class="text-success">Available</td>
+          <td><button class="btn btn-custom" onclick="openBookingModal('2025-03-29', '12:00')">Book</button></td>
+        </tr>
+        <tr>
+          <td>2025-03-30</td>
+          <td>09:30</td>
+          <td class="text-danger">Full</td>
+          <td><button class="btn btn-secondary" disabled>Full</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- What’s Included -->
+    <div class="section-title">💡 What's Included in the Tour?</div>
+    <ul class="list-group list-group-flush mb-5">
+      <li class="list-group-item">Self-picking strawberries 🍓</li>
+      <li class="list-group-item">Guided tour through the field</li>
+      <li class="list-group-item">Natural strawberry growing explanation</li>
+      <li class="list-group-item">Tastings directly from the field</li>
+      <li class="list-group-item">Shaded picnic area ☀️</li>
+    </ul>
+
+    <!-- Price & Register -->
+    <div class="text-center mb-5">
+      <h4>💵 Price: 50$ per person | Children under 3 – Free</h4>
+    </div>
+
+    <!-- Reviews -->
+    <div class="section-title">📝 Customer Reviews</div>
+    <div class="mb-5">
+      <blockquote class="blockquote">"A perfect experience! The kids didn’t want to leave!" – Shira L.</blockquote>
+      <blockquote class="blockquote">"Fresh strawberries, great tour, kind service." – Noam D.</blockquote>
+      <blockquote class="blockquote">"We’ll come back in summer!" – The Cohen Family</blockquote>
+    </div>
+
+    <!-- Map -->
+    <div class="text-center">
+      <p>📍 Lower Galilee area, near Kfar Tavor</p>
+      <a href="https://maps.google.com" target="_blank" class="btn btn-outline-success">View Map</a>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="modal fade" id="bookingModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tour Registration</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Number of Participants</label>
+              <input type="number" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Date</label>
+              <input type="text" class="form-control" id="modal-date" readonly>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Time</label>
+              <input type="text" class="form-control" id="modal-time" readonly>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success">Next to Payment</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Cart Modal -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="cartModalLabel">🛒 Your Cart</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="cart-items">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <div class="modal-footer">
+            <h5 class="me-auto">Total: <span id="cart-total">$0.00</span></h5>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button onclick="window.location.href='payment.html'" class="btn btn-success">Checkout</button>
+          </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+  <!-- Footer -->
+<footer class="footer text-center py-4 border-top">
+    <p class="mb-1">&copy; 2025 FRUTEE. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+    </ul>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+
+    function openBookingModal(date = '', time = '') {
+      document.getElementById('modal-date').value = date;
+      document.getElementById('modal-time').value = time;
+      bookingModal.show();
+    }
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>

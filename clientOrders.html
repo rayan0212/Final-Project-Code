@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Fruit Orders | FRUTEE</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      background-color: #f4f4f4;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .header {
+      background-color: #85bb65;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .order-card {
+      background-color: #fffdf7;
+      border-left: 5px solid #f4a259;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .badge-success {
+      background-color: #85bb65;
+    }
+
+    .badge-warning {
+      background-color: #ffc107;
+      color: #333;
+    }
+
+    .badge-primary {
+      background-color: #0d6efd;
+    }
+
+    .btn-cancel {
+      background-color: #dc3545;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .btn-cancel:hover {
+      background-color: #bb2d3b;
+    }
+
+    .footer {
+      background-color: #ffffff;
+      padding: 1rem 2rem;
+      text-align: center;
+      border-top: 1px solid #ccc;
+      margin-top: 3rem;
+      width: 100%;
+      }
+
+      .footer-links {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      padding: 0;
+      }
+
+      .footer-links a {
+      text-decoration: none;
+      color: #3ca64c;
+      font-weight: 500;
+      }
+
+  </style>
+</head>
+<body>
+
+      <!-- Header -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+          <a class="navbar-brand fw-bold text-success" href="#">FRUTEE</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="Client_DashBoard.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="Product_Catalog.html">Shop</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-person"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="Client Profile.html">My Profile</a></li>
+                  <li><a class="dropdown-item" href="clientOrders.html">My Orders</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Sign Out</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#cartModal" onclick="renderCart()">
+                    <i class="bi bi-cart fs-4"></i>
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      0
+                    </span>
+                  </a>              
+              </li>                             
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
+        <!-- Cart Modal -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cartModalLabel">🛒 Your Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="cart-items">
+        <!-- Cart items will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <h5 class="me-auto">Total: <span id="cart-total">$0.00</span></h5>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-success">Checkout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<main>
+<div class="header">
+  <h1>🌿 All My FRUTEE Orders </h1>
+  <p>Here you can view and manage your fruit orders</p>
+</div>
+
+<div class="container mt-4 mb-5">
+    <h3 class="mt-5 mb-4">📦 My Fruit Orders</h3>
+  <div id="ordersContainer"></div>
+  <h3 class="mt-5 mb-4">🧑‍🏫 My Workshop Registrations</h3>
+<div id="workshopContainer"></div>
+<h3 class="mt-5 mb-3">👇 Previous Orders</h3>
+<div id="pastOrdersContainer"></div>
+
+
+</div>
+
+
+
+</main>
+
+
+
+  <!-- Footer -->
+  <footer class="footer text-center py-4 border-top">
+    <p class="mb-1">&copy; 2025 FRUTEE. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Contact Us</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+    </ul>
+  </footer>
+
+<script>
+  const LOCAL_STORAGE_KEY = "fruteeOrders";
+
+
+
+  // טען מה-Local Storage או השתמש בברירת מחדל
+  function getOrders() {
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : defaultOrders;
+  }
+
+  function saveOrders(orders) {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(orders));
+  }
+
+  function renderOrders() {
+  const container = document.getElementById("ordersContainer");
+  container.innerHTML = "";
+
+  const orders = getOrders();
+  if (orders.length === 0) {
+    container.innerHTML = "<p class='text-center mt-4'>No orders found.</p>";
+    return;
+  }
+
+  orders.forEach(order => {
+    const card = document.createElement("div");
+    card.className = "order-card";
+
+    let badgeClass = "badge-secondary";
+    if (order.status === "Delivered") badgeClass = "badge-primary";
+    else if (order.status === "In Preparation") badgeClass = "badge-warning";
+    else if (order.status === "Shipped") badgeClass = "badge-success";
+
+    let itemsHTML = "";
+    if (Array.isArray(order.items)) {
+      order.items.forEach(item => {
+        itemsHTML += `
+          <div class="d-flex justify-content-between border-bottom py-1">
+            <div>${item.product}</div>
+            <div>${item.quantity}</div>
+          </div>`;
+      });
+    } else {
+      // תמיכה אחורית אם נשמרו פריטים במבנה הישן
+      itemsHTML = `
+        <div class="d-flex justify-content-between border-bottom py-1">
+          <div>${order.product}</div>
+          <div>${order.quantity}</div>
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <div class="mb-2">
+        <div class="fw-bold fs-5 mb-2">Order on ${order.date}</div>
+        ${itemsHTML}
+        ${order.totalPrice ? `<div class="mt-2 text-end fw-bold">Total: $${order.totalPrice}</div>` : ""}
+        <div class="mt-2 d-flex justify-content-between align-items-center">
+          <div><strong>Status:</strong> <span class="badge ${badgeClass}">${order.status}</span></div>
+          ${order.status === "In Preparation" ? `<button class="btn-cancel" onclick="cancelOrder(${order.id})">Cancel</button>` : ""}
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+    
+
+  });
+  
+}
+
+
+
+function cancelOrder(orderId) {
+  if (!confirm("Are you sure you want to cancel this order?")) return;
+
+  let orders = getOrders();
+  orders = orders.filter(o => o.id !== orderId);
+  saveOrders(orders);
+  renderOrders();
+}
+
+
+  // Load on page ready
+  document.addEventListener("DOMContentLoaded", () => {
+    renderOrders();
+  });
+
+  const LOCAL_STORAGE_WORKSHOPS = "fruteeWorkshops";
+
+  const defaultWorkshops = [
+  {
+    id: 101,
+    name: "🍋 Lemon Cake Baking",
+    date: "2025-04-07",
+    time: "10:00",
+    status: "Confirmed"
+  },
+  {
+    id: 102,
+    name: "🍹 Citrus Juice Workshop",
+    date: "2025-04-09",
+    time: "12:00",
+    status: "Pending"
+  }
+];
+
+function getWorkshops() {
+  const saved = localStorage.getItem(LOCAL_STORAGE_WORKSHOPS);
+  return saved ? JSON.parse(saved) : defaultWorkshops;
+}
+
+function saveWorkshops(list) {
+  localStorage.setItem(LOCAL_STORAGE_WORKSHOPS, JSON.stringify(list));
+}
+
+function renderWorkshops() {
+  const container = document.getElementById("workshopContainer");
+  container.innerHTML = "";
+
+  const dynamicWorkshops = JSON.parse(localStorage.getItem("fruteeWorkshopOrders")) || [];
+  const staticWorkshops = JSON.parse(localStorage.getItem("fruteeWorkshops")) || [];
+
+  const allWorkshops = [...dynamicWorkshops.map(w => ({
+    name: `📚 ${w.title}`,
+    date: w.date,
+    time: "—",
+    participants: w.participants,
+    price: w.totalPrice,
+    farmer: w.farmer,
+    status: "Confirmed"
+  })), ...staticWorkshops];
+
+  if (allWorkshops.length === 0) {
+    container.innerHTML = "<p class='text-center'>No workshop registrations found.</p>";
+    return;
+  }
+
+  allWorkshops.forEach(ws => {
+    const card = document.createElement("div");
+    card.className = "order-card mb-3";
+
+    const badge = ws.status === "Confirmed" ? "badge-success" :
+                  ws.status === "Pending" ? "badge-warning" : "badge-secondary";
+
+    card.innerHTML = `
+      <div class="mb-2">
+        <div class="fw-bold fs-5 mb-2">${ws.name}</div>
+        <div><strong>Date:</strong> ${ws.date}</div>
+        ${ws.time ? `<div><strong>Time:</strong> ${ws.time}</div>` : ""}
+        ${ws.farmer ? `<div><strong>Farmer:</strong> ${ws.farmer}</div>` : ""}
+        ${ws.participants ? `<div><strong>Participants:</strong> ${ws.participants}</div>` : ""}
+        ${ws.price ? `<div><strong>Total Paid:</strong> $${ws.price}</div>` : ""}
+        <div class="mt-2"><strong>Status:</strong> <span class="badge ${badge}">${ws.status}</span></div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderOrders();
+  renderWorkshops();  // ✅ מציג את כל הסדנאות (גם החדשות וגם הישנות)
+  renderPastOrders?.(); // רק אם קיים
+});
+
+
+const previousOrders = [
+  {
+    id: 9001,
+    product: "🍑 Peaches",
+    date: "2025-03-10",
+    quantity: "1 kg",
+    farmer: "Farmer Dina"
+  },
+  {
+    id: 9002,
+    product: "🍐 Pears",
+    date: "2025-03-12",
+    quantity: "2.5 kg",
+    farmer: "Farmer Youssef"
+  }
+];
+
+
+function renderPastOrders() {
+  const container = document.getElementById("pastOrdersContainer");
+  container.innerHTML = "";
+
+  const savedFeedbacks = JSON.parse(localStorage.getItem("fruteePastFeedbacks")) || {};
+
+  previousOrders.forEach(order => {
+    const card = document.createElement("div");
+    card.className = "order-card";
+
+    let itemsHTML = "";
+    order.items?.forEach(item => {
+      itemsHTML += `
+        <div class="d-flex justify-content-between border-bottom py-1">
+          <div>${item.product}</div>
+          <div>${item.quantity}</div>
+        </div>`;
+    });
+
+    const hasFeedback = savedFeedbacks[order.id];
+
+    card.innerHTML = `
+      <div class="mb-2">
+        <div class="fw-bold fs-5 mb-2">Order on ${order.date}</div>
+        ${itemsHTML}
+        ${order.totalPrice ? `<div class="mt-2 text-end fw-bold">Total: $${order.totalPrice}</div>` : ""}
+        <div class="mt-3">
+          <strong>Farmer:</strong> ${order.farmer || "Unknown"}
+        </div>
+
+        <div class="mt-3">
+          ${
+            hasFeedback
+              ? `<div id="sent-${order.id}" class="feedback-sent mt-2">✅ Feedback sent:<br><em>"${savedFeedbacks[order.id]}"</em></div>`
+              : `
+              <textarea id="feedback-${order.id}" rows="2" class="form-control mt-2" placeholder="Write your feedback..."></textarea>
+              <button class="btn btn-sm btn-warning mt-2" onclick="sendPastFeedback(${order.id})">Send Feedback</button>
+              <div id="sent-${order.id}" class="feedback-sent d-none"></div>`
+          }
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderPastOrders(); // זה יציג את ההזמנות הקודמות ישר כשנכנסים לדף
+});
+
+
+function sendPastFeedback(id) {
+  const input = document.getElementById(`feedback-${id}`);
+  const value = input.value.trim();
+
+  if (!value) return alert("Please write something!");
+
+  // שמירה בלוקל סטורג'
+  savePastFeedback(id, value);
+
+  // הצגה
+  input.remove();
+  const btn = document.querySelector(`button[onclick="sendPastFeedback(${id})"]`);
+  if (btn) btn.remove();
+
+  const msg = document.getElementById(`sent-${id}`);
+  msg.innerHTML = `✅ Feedback sent:<br><em>"${value}"</em>`;
+  msg.classList.remove("d-none");
+}
+
+
+function savePastFeedback(orderId, text) {
+  let feedbacks = JSON.parse(localStorage.getItem("fruteePastFeedbacks")) || {};
+  feedbacks[orderId] = text;
+  localStorage.setItem("fruteePastFeedbacks", JSON.stringify(feedbacks));
+}
+
+
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>

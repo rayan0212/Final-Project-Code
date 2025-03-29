@@ -1,180 +1,657 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page | FRUTEE</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <style>
-        body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-family: 'Poppins', sans-serif;
-        }
-        .hero {
-            background: url('https://source.unsplash.com/1600x900/?fruit,market') no-repeat center center/cover;
-            height: 70vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            font-weight: bold;
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
-            position: relative;
-            border-bottom-left-radius: 50px;
-            border-bottom-right-radius: 50px;
-        }
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom-left-radius: 50px;
-            border-bottom-right-radius: 50px;
-        }
-        .hero-content {
-            z-index: 2;
-            position: relative;
-        }
-        .product-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }
-        .cta-btn {
-            font-size: 18px;
-            font-weight: bold;
-            padding: 12px 25px;
-            border-radius: 50px;
-            transition: 0.3s ease-in-out;
-        }
-        .cta-btn:hover {
-            transform: scale(1.05);
-        }
-        .info-box {
-            padding: 20px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
-        }
-        .info-box:hover {
-            transform: translateY(-5px);
-        }
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FRUTEE - Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fefefe;
+    }
+
+    .navbar {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .category-card {
+      height: 250px;
+      color: white;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      border-radius: 10px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+      transition: 0.3s;
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-content {
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .modal-header {
+      border-bottom: none;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .coupon-box {
+      font-size: 1.2rem;
+      background: #f1f1f1;
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: inline-block;
+      font-weight: bold;
+      color: #28a745;
+    }
+
+    .hero-section {
+      background: url(img/picking\ 2.jpeg) center/cover no-repeat;
+      position: relative;
+      color: white;
+      padding: 120px 0;
+    }
+
+    .hero-section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .banner-box {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 40px 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(6px);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    #chatbot-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #85bb65; /* ירוק FRUTEE */
+      color: white;
+      padding: 10px 15px;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      font-weight: bold;
+      z-index: 1000;
+    }
+
+    #chatbot-window {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 320px;
+      background: #ffffff;
+      border: 2px solid #85bb65;
+      border-radius: 15px;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    #chatbot-header {
+      background: #8cd5ae; 
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #chatbot-header select {
+      background: white;
+      border: none;
+      padding: 3px;
+      font-size: 12px;
+      border-radius: 5px;
+    }
+
+    #chatbot-messages {
+      height: 250px;
+      padding: 10px;
+      overflow-y: auto;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    #chatbot-input-area {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+
+    #chatbot-input-area input {
+      flex: 1;
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    #chatbot-input-area button {
+      border: none;
+      background: #85bb65; /* ירוק מותאם */
+      color: white;
+      padding: 10px 15px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #chatbot-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #85bb65;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 25px;
+      cursor: pointer; /* ✋ היד */
+      font-weight: bold;
+      z-index: 1000;
+      transition: transform 0.2s ease;
+    }
+
+    #chatbot-toggle:hover {
+      transform: scale(1.05);
+    }
+
+    #close-chatbot {
+    cursor: pointer; /* היד מעל ה-X */
+    font-size: 20px;
+    font-weight: bold;
+    padding: 2px 8px;
+    transition: color 0.2s;
+  }
+
+  #close-chatbot:hover {
+    color: #ffe6c1; /* טיפה בהיר ב-hover */
+  }
+
+  .chat-option {
+    background-color: #8cd5ae;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    margin: 4px 4px 0 0;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
+
+  .chat-option:hover {
+    background-color: #8cd5ae;
+  }
+
+  .text-end {
+    text-align: right;
+  }
+
+  .text-start {
+    text-align: left;
+  }
+
+
+  .footer {
+      background-color: #ffffff;
+      padding: 1rem 2rem;
+      text-align: center;
+      border-top: 1px solid #ccc;
+      margin-top: 3rem;
+      width: 100%;
+      }
+
+      .footer-links {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      padding: 0;
+      }
+
+      .footer-links a {
+      text-decoration: none;
+      color: #3ca64c;
+      font-weight: 500;
+      }
+
+  </style>
+
+  
 </head>
+
 <body>
 
-<!-- Hero Section -->
-<div class="hero">
-    <div class="hero-overlay"></div>
-    <div class="hero-content text-center">
-        <h1>Welcome to FRUTEE 🍎</h1>
-        <p>Fresh fruits directly from farmers to your home.</p>
-    </div>
+
+  <!-- Chatbot Toggle Button -->
+<div id="chatbot-toggle" onclick="toggleChatbot()">
+  💬 Chat with us
 </div>
 
-<div class="container mt-5">
+<!-- Chatbot Window -->
+<div id="chatbot-window" class="d-none">
+  <div id="chatbot-header">
+      FRUTEE Assistant
+    <span id="close-chatbot" onclick="toggleChatbot()">×</span>
+  </div>
+  <div id="chatbot-messages"></div>
+  <div id="chatbot-input-area">
+    <input type="text" id="chatbot-input" placeholder="Type your message..." onkeydown="handleInput(event)" />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
 
-    <!-- Popular Products -->
-    <h2 class="text-center mb-4 fade-in"><i class="fa-solid fa-fire text-danger"></i> Popular Products</h2>
-    <div class="row fade-in" id="popular-products">
-        <!-- Dynamic product cards will be inserted here -->
-    </div>
 
-    <!-- How It Works Section -->
-    <div class="mt-5 text-center">
-        <h2 class="fade-in"><i class="fa-solid fa-circle-info text-primary"></i> How It Works?</h2>
-        <p class="lead fade-in">Order fresh produce directly from farmers in three simple steps:</p>
-        <div class="row">
-            <div class="col-md-4 fade-in">
-                <div class="info-box">
-                    <i class="fa-solid fa-search fa-3x text-success"></i>
-                    <h4>1. Browse</h4>
-                    <p>Search for fresh fruits & vegetables available in your area.</p>
-                </div>
-            </div>
-            <div class="col-md-4 fade-in">
-                <div class="info-box">
-                    <i class="fa-solid fa-cart-shopping fa-3x text-warning"></i>
-                    <h4>2. Order</h4>
-                    <p>Add your selected products to the cart and place an order.</p>
-                </div>
-            </div>
-            <div class="col-md-4 fade-in">
-                <div class="info-box">
-                    <i class="fa-solid fa-truck fa-3x text-info"></i>
-                    <h4>3. Receive</h4>
-                    <p>Get your fresh order delivered straight to your home.</p>
-                </div>
-            </div>
+
+    <!-- ✅ Modal Popup -->
+<div class="modal fade" id="welcomeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-center">
+        <div class="modal-header">
+          <h5 class="modal-title w-100">🎉 Welcome to FRUTEE!</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+          <p class="fs-5">Enjoy <strong>15% OFF</strong> your first order!</p>
+          <p class="text-muted">Use the coupon below at checkout:</p>
+          <div id="couponCode" class="coupon-box mb-3">FRUTEE15</div>
+          <br>
+          <button class="btn btn-success" onclick="copyCoupon()">Copy Code</button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Chatbot Access -->
-    <div class="text-center mt-5 fade-in">
-        <button class="btn btn-primary cta-btn" onclick="openChatbot()">
-            <i class="fa-solid fa-robot"></i> Chat with Our AI Assistant
-        </button>
+      <!-- Header -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+        <div class="container">
+          <a class="navbar-brand fw-bold text-success" href="#">FRUTEE</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="Client_DashBoard.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="Product_Catalog.html">Shop</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-person"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="Client Profile.html">My Profile</a></li>
+                  <li><a class="dropdown-item" href="clientOrders.html">My Orders</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Sign Out</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="position-relative" data-bs-toggle="modal" data-bs-target="#cartModal" onclick="renderCart()">
+                    <i class="bi bi-cart fs-4"></i>
+                    <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      0
+                    </span>
+                  </a>              
+              </li>                             
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
+        <!-- Cart Modal -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cartModalLabel">🛒 Your Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="cart-items">
+        <!-- Cart items will be loaded here -->
+      </div>
+      <div class="modal-footer">
+        <h5 class="me-auto">Total: <span id="cart-total">$0.00</span></h5>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button onclick="window.location.href='payment.html'" class="btn btn-success">Checkout</button>
+      </div>
     </div>
-
+  </div>
 </div>
 
-<script>
-    // Simulating popular products dynamically
-    const products = [
-        { name: "Organic Apples", price: "$3.99/kg", image: "https://source.unsplash.com/300x200/?apples" },
-        { name: "Fresh Oranges", price: "$2.49/kg", image: "https://source.unsplash.com/300x200/?oranges" },
-        { name: "Bananas", price: "$1.99/kg", image: "https://source.unsplash.com/300x200/?bananas" }
-    ];
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container banner-box text-center text-white">
+      <h2 class="fw-bold display-6">FRUTEE's Pick of the Month</h2>
+      <h1 class="display-5 text-warning">🍓 Fresh Strawberry Basket</h1>
+      <p class="lead mt-3 mb-1">Only <span class="fs-2 fw-bold">$5.99</span></p>
+      <p class="small mb-4">For club members and online shoppers</p>
+      <a href="#" class="btn btn-light px-4 py-2 fw-semibold">Shop Now</a>
+      <p class="mt-3 small">Valid until March 31st, 2025 or while supplies last</p>
+    </div>
+  </section>
+  
 
-    function loadPopularProducts() {
-        const productContainer = document.getElementById("popular-products");
-        products.forEach(product => {
-            const productCard = `
-                <div class="col-md-4 fade-in">
-                    <div class="card product-card">
-                        <img src="${product.image}" class="card-img-top" alt="${product.name}">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">${product.name}</h5>
-                            <p class="card-text">${product.price}</p>
-                            <button class="btn btn-success"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            productContainer.innerHTML += productCard;
-        });
+  <!-- Categories Section -->
+  <section class="container py-5">
+    <div class="text-center mb-4">
+      <h2>Explore Our Services</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="category-card" style="background-image: url('img/BASKET.webp');">
+          <h3>PRODUCTS</h3>
+          <a href="Product_Catalog.html" class="btn btn-light mt-2">Shop Now</a>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="category-card" style="background-image: url('img/drinks.webp');">
+          <h3>WORKSHOPS</h3>
+          <a href="Workshop Registration.html" class="btn btn-light mt-2">Join Now</a>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="category-card" style="background-image: url('img/free-photo-of-close-up-of-people-holding-mangos.jpeg');">
+          <h3>Fruit-Picking Farmers</h3>
+          <a href="picking.html" class="btn btn-light mt-2">Meet Them</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mb-4">
+      <h2>🌟 Popular Fruit-Picking Fields</h2>
+      <p class="text-muted">Discover the most loved fruit fields and book your spot</p>
+    </div>
+    
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="category-card" style="background-image: url('img/sidebar-1.jpg');">
+          <h3>Sunny Strawberry Field</h3>
+          <a href="Sunny Strawberry Field.html" class="btn btn-light mt-2">View More</a>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="category-card" style="background-image: url('img/Golden Apple Orchard.jpeg');">
+          <h3>Golden Apple Orchard</h3>
+          <a href="Golden Apple Orchard.html" class="btn btn-light mt-2">View More</a>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="category-card" style="background-image: url('img/Citrus Breeze Grove.jpeg');">
+          <h3>Citrus Breeze Grove</h3>
+          <a href="Citrus Breeze Grove.html" class="btn btn-light mt-2">View More</a>
+        </div>
+      </div>
+      <div class="text-center mt-3">
+        <a href="allfeilds.html" class="btn btn-outline-success">
+          View All Fruit Fields
+        </a>
+      </div>      
+    </div>
+    
+
+    
+  </section>
+
+
+  <!-- Footer -->
+<footer class="footer text-center py-4 border-top">
+  <p class="mb-1">&copy; 2025 FRUTEE. All rights reserved.</p>
+  <ul class="footer-links">
+    <li><a href="#">Contact Us</a></li>
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Terms of Use</a></li>
+  </ul>
+</footer>
+
+  <script>
+    
+document.addEventListener("DOMContentLoaded", function () {
+  // Show the modal only once per session
+  if (!sessionStorage.getItem("promoShown")) {
+    const modal = new bootstrap.Modal(document.getElementById("welcomeModal"));
+    modal.show();
+    sessionStorage.setItem("promoShown", "true");
+
+    // שמור את המודל לשימוש מאוחר יותר
+    window.fruteeModal = modal;
+  }
+});
+
+function copyCoupon() {
+  const coupon = document.getElementById("couponCode").innerText;
+  navigator.clipboard.writeText(coupon).then(() => {
+    // סגור את המודל בלי להציג alert
+    if (window.fruteeModal) {
+      window.fruteeModal.hide();
     }
+  });
+}
 
-    function openChatbot() {
-        alert("Chatbot is coming soon!");
-    }
 
-    // Load products on page load
-    document.addEventListener("DOMContentLoaded", () => {
-        loadPopularProducts();
-        setTimeout(() => document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible')), 500);
-    });
-</script>
+let firstMessageSent = false;
+
+function toggleChatbot() {
+  const botWindow = document.getElementById('chatbot-window');
+  const isHidden = botWindow.classList.contains('d-none');
+
+  if (isHidden) {
+    // נפתח – מתחיל שיחה עם שאלה ראשית
+    botWindow.classList.remove('d-none');
+    clearMessages();
+    askMainOptions(); // שאלה עם כפתורים
+  } else {
+    // נסגר – איפוס
+    botWindow.classList.add('d-none');
+    clearMessages();
+  }
+}
+
+
+
+function clearMessages() {
+  document.getElementById('chatbot-messages').innerHTML = '';
+}
+
+function handleInput(e) {
+  if (e.key === 'Enter') sendMessage();
+}
+
+function sendMessage() {
+  const input = document.getElementById('chatbot-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  addMessage('user', msg);
+  input.value = '';
+
+  if (!firstMessageSent) {
+    firstMessageSent = true;
+    setTimeout(() => {
+      askMainOptions();
+    }, 600);
+  }
+}
+
+function addMessage(sender, text) {
+  const container = document.getElementById('chatbot-messages');
+  const bubble = document.createElement('div');
+  bubble.className = sender === 'user' ? 'text-end text-primary mb-2' : 'text-start text-dark mb-2';
+  bubble.innerText = text;
+  container.appendChild(bubble);
+  container.scrollTop = container.scrollHeight;
+}
+
+function askMainOptions() {
+  addMessage('bot', "How can I help you today?");
+  const options = [
+    { label: "🍊 Booking", action: handleBooking },
+    { label: "🧑‍🏫 Workshop Info", action: handleWorkshop },
+    { label: "🗓️ Available Tours", action: handleTours },
+    { label: "💰 Prices", action: handlePrices }
+  ];
+
+  const container = document.getElementById('chatbot-messages');
+  const btnWrapper = document.createElement('div');
+
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.innerText = opt.label;
+    btn.className = 'chat-option';
+    btn.onclick = () => {
+      addMessage('user', opt.label);
+      btnWrapper.remove();
+      setTimeout(() => {
+        opt.action();
+      }, 500);
+    };
+    btnWrapper.appendChild(btn);
+  });
+
+  container.appendChild(btnWrapper);
+  container.scrollTop = container.scrollHeight;
+}
+
+// תגובות לכל כפתור:
+function handleBooking() {
+  addMessage('bot', "You can book a tour through the schedule on the page 👇");
+
+  const options = [
+    { label: "📅 Help me choose a date", action: () => {
+        addMessage('bot', "Great! Available dates:\n✔️ April 2 – 09:30\n✔️ April 4 – 11:00");
+        askBackToMenu();
+      }
+    },
+    { label: "🔙 Back to Menu", action: askMainOptions }
+  ];
+
+  showOptions(options);
+}
+
+function handleWorkshop() {
+  addMessage('bot', "We currently offer:\nChoose one:");
+
+  const options = [
+    { label: "🍋 Lemon Cake Baking", action: () => {
+        addMessage('bot', "Great! 🍰 We'll reserve your spot for the Lemon Cake Workshop.");
+        askBackToMenu();
+      }
+    },
+    { label: "🍹 Citrus Juice Workshop", action: () => {
+        addMessage('bot', "Yum! 🍹 You're signed up for the Citrus Juice Workshop.");
+        askBackToMenu();
+      }
+    },
+    { label: "🔙 Back to Menu", action: askMainOptions }
+  ];
+
+  showOptions(options);
+}
+
+function handleTours() {
+  addMessage('bot', "Next available tours:\n✔️ April 2 – 09:30\n✔️ April 4 – 11:00\n❌ April 6 – Full");
+
+  const options = [
+    { label: "📍 View tour location", action: () => {
+        addMessage('bot', "We're located near Kfar Tavor – click 'View Map' on the page to see it 🗺️");
+        askBackToMenu();
+      }
+    },
+    { label: "🔙 Back to Menu", action: askMainOptions }
+  ];
+
+  showOptions(options);
+}
+
+function handlePrices() {
+  addMessage('bot', "The price is 45$ per person.\nChildren under 3 – Free 👶");
+
+  const options = [
+    { label: "💳 How can I pay?", action: () => {
+        addMessage('bot', "We accept credit card payments at checkout after booking 💳");
+        askBackToMenu();
+      }
+    },
+    { label: "🔙 Back to Menu", action: askMainOptions }
+  ];
+
+  showOptions(options);
+}
+
+
+function askBackToMenu() {
+  const options = [
+    { label: "🔙 Back to Main Menu", action: askMainOptions }
+  ];
+  showOptions(options);
+}
+
+function showOptions(options) {
+  const container = document.getElementById('chatbot-messages');
+  const btnWrapper = document.createElement('div');
+
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.innerText = opt.label;
+    btn.className = 'chat-option';
+    btn.onclick = () => {
+      addMessage('user', opt.label);
+      btnWrapper.remove();
+      setTimeout(() => {
+        opt.action();
+      }, 500);
+    };
+    btnWrapper.appendChild(btn);
+  });
+
+  container.appendChild(btnWrapper);
+  container.scrollTop = container.scrollHeight;
+}
+
+
+
+
+
+
+
+
+
+
+  </script>
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/cart.js"></script>
 
 </body>
+
 </html>
